@@ -53,7 +53,7 @@ const employeeSchema = new mongoose.Schema({
     ssn: { type: String, default: '' },
     dob: { type: Date, default: Date.now },
     gender: { type: String, default: '' },
-    visaStatus: {
+    workAuthorization: {
         title: { type: String, default: '' },
         startDate: { type: Date, default: Date.now },
         endDate: { type: Date, default: Date.now }

@@ -31,8 +31,6 @@ Employee.findOne({ _id: userId }, 'firstName')  // 只查询firstName字段
         console.error('Error retrieving employee:', err);
     });
 
-const userId = "某个特定的用户ID";  // 替换成实际的用户ID
-
 Employee.findOneAndUpdate(
     { _id: userId },  // 查询条件，根据_id查找
     { $set: { "onboardingStatus.currentStep": "COMPLETE" } },  // 更新操作
