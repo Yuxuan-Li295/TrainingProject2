@@ -16,6 +16,21 @@ const currentVisaStepEnum = {
     COMPLETE: 'complete'  // 完成所有步骤
 };
 
+const documentDetailSchema = new mongoose.Schema({
+    documentURL: { type: String, required: true },
+    status: { type: String, enum: ['pending', 'submitted', 'approved', 'rejected'], default: 'pending' },
+    uploadedDate: { type: Date, default: Date.now },
+    lastUpdated: { type: Date, default: Date.now },
+    description: { type: String, default: '' } // Optional description for the document
+});
+
+const documentsSchema = new mongoose.Schema({
+    RECEIPT: { type: [documentDetailSchema], default: [] },
+    EAD_CARD: { type: [documentDetailSchema], default: [] },
+    I983_FORM: { type: [documentDetailSchema], default: [] },
+    I20_FORM: { type: [documentDetailSchema], default: [] },
+    OTHERS: { type: [documentDetailSchema], default: [] } // For miscellaneous or additional documents
+});
 
 const employeeSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -50,10 +65,7 @@ const employeeSchema = new mongoose.Schema({
         phone: { type: String, default: '' },
         relationship: { type: String, default: '' }
     }],
-    documents: [{
-        documentType: { type: String, default: '' },
-        documentURL: { type: String, default: '' }
-    }],
+    documents: { type: documentsSchema, default: () => ({}) },
     onboardingStatus: {
         currentStep: { type: String, enum: Object.values(currentVisaStepEnum), default: currentVisaStepEnum.NOT_STARTED },
         receiptStatus: { type: String, enum: Object.values(visaStepStatusEnum), default: visaStepStatusEnum.NOT_SUBMITTED },
