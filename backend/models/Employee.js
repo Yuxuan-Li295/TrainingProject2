@@ -18,7 +18,6 @@ const currentVisaStepEnum = {
 
 const documentDetailSchema = new mongoose.Schema({
     documentURL: { type: String, required: true },
-    status: { type: String, enum: ['pending', 'submitted', 'approved', 'rejected'], default: 'pending' },
     uploadedDate: { type: Date, default: Date.now },
     lastUpdated: { type: Date, default: Date.now },
     description: { type: String, default: '' } // Optional description for the document
