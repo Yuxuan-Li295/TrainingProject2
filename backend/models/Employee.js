@@ -8,6 +8,7 @@ const visaStepStatusEnum = {
 };
 
 const currentVisaStepEnum = {
+    NOT_STARTED: 'not_started',
     RECEIPT: 'receipt',  // OPT收据阶段
     EAD_CARD: 'ead_card',  // EAD卡阶段
     I983: 'i983',  // I-983表格阶段
@@ -54,7 +55,7 @@ const employeeSchema = new mongoose.Schema({
         documentURL: { type: String, default: '' }
     }],
     onboardingStatus: {
-        currentStep: { type: String, enum: Object.values(currentVisaStepEnum), default: currentVisaStepEnum.RECEIPT },
+        currentStep: { type: String, enum: Object.values(currentVisaStepEnum), default: currentVisaStepEnum.NOT_STARTED },
         receiptStatus: { type: String, enum: Object.values(visaStepStatusEnum), default: visaStepStatusEnum.NOT_SUBMITTED },
         eadCardStatus: { type: String, enum: Object.values(visaStepStatusEnum), default: visaStepStatusEnum.NOT_SUBMITTED },
         i983Status: { type: String, enum: Object.values(visaStepStatusEnum), default: visaStepStatusEnum.NOT_SUBMITTED },
