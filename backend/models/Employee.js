@@ -70,7 +70,8 @@ const employeeSchema = new mongoose.Schema({
         receiptStatus: { type: String, enum: Object.values(visaStepStatusEnum), default: visaStepStatusEnum.NOT_SUBMITTED },
         eadCardStatus: { type: String, enum: Object.values(visaStepStatusEnum), default: visaStepStatusEnum.NOT_SUBMITTED },
         i983Status: { type: String, enum: Object.values(visaStepStatusEnum), default: visaStepStatusEnum.NOT_SUBMITTED },
-        i20Status: { type: String, enum: Object.values(visaStepStatusEnum), default: visaStepStatusEnum.NOT_SUBMITTED }
+        i20Status: { type: String, enum: Object.values(visaStepStatusEnum), default: visaStepStatusEnum.NOT_SUBMITTED },
+        currentFeedback: {type: String, default:'' }
     }
 });
 
