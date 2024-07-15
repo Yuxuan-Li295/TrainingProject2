@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from '../hooks/hooks.ts';
-import { fetchVisaStatus } from "../api/mockVisaApi.ts";
-import { setVisaStatus } from "../store/visaSlice.ts";
+import { fetchVisaStatus, submitDocument } from "../api/mockVisaApi.ts";
+import { setSubmissionStatus, setVisaStatus } from "../store/visaSlice.ts";
 import { message, Spin, Upload, Button, Card } from "antd";
 import React from "react";
 import { UploadOutlined } from "@ant-design/icons";
@@ -26,10 +26,15 @@ export const VisaStatusManagement = () => {
   }, [dispatch]);
 
 
-  const handleUpload = (info: any, fileType: string) => {
+  const handleUpload = async (info: any, fileType: string) => {
     if (info.file.status === 'done') {
-      message.success(`${info.file.name} uploaded successfully`);
-      dispatch(setVisaStatus({ [fileType]: 'pending' }));
+      try {
+        const response = await submitDocument(fileType);
+        message.success(`${info.file.name} uploaded successfully`);
+        dispatch(setSubmissionStatus({ fileType, status: response.status }));
+      } catch (error) {
+        message.error(`${info.file.name} upload failed`);
+      }
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} upload failed`);
     }
@@ -111,7 +116,7 @@ export const VisaStatusManagement = () => {
               <header className="text-2xl font-semibold my-5 text-red-500">I-983 Rejected</header>
               <p className="text-red-500 text-sm font-semibold mb-4">{visaStatus.feedback}</p>
               <p className="text-lg font-semibold mb-4">Please address the above feedback and re-upload your I-983 for review.</p>
-              {renderFileInput('Re-upload OPT Receipt', 'optReceipt')}
+              {renderFileInput('Re-upload I-983', 'i983')}
             </>
           );
         }

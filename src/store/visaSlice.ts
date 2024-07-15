@@ -23,8 +23,12 @@ const visaSlice = createSlice({
     setVisaStatus(state, action: PayloadAction<Partial<VisaState>>) {
       return { ...state, ...action.payload };
     },
+    setSubmissionStatus(state, action: PayloadAction<{ fileType: string; status: string }>) {
+      const { fileType, status } = action.payload;
+      (state as any)[fileType] = status;
+    },
   },
 });
 
-export const { setVisaStatus } = visaSlice.actions;
+export const { setVisaStatus, setSubmissionStatus } = visaSlice.actions;
 export default visaSlice.reducer;
