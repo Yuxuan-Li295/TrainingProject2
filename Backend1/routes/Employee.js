@@ -72,3 +72,30 @@ router.post('/update/:username', (req, res) => {
     })
   })
 })
+
+router.post('/onboard/:username', (req, res) => {
+  const { username } = req.params
+  const updateData = req.body
+
+  User.findOneAndUpdate({ account: username }, updateData, { new: true }, (err, doc) => {
+    if (err) {
+      return res.status(500).send({
+        Code: 500,
+        Msg: '服务器错误'
+      })
+    }
+    if (!doc) {
+      return res.status(404).send({
+        Code: 404,
+        Msg: '用户未找到'
+      })
+    }
+    const id = doc._id
+
+    res.send({
+      Code: 200,
+      Msg: '更新成功',
+      data: doc
+    })
+  })
+})

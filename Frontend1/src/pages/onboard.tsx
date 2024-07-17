@@ -155,14 +155,14 @@ const Onboard = () => {
         }
 
         axios
-            .post(`http://localhost:8088/Employee/update/${username}`, { ...nestedValues, profilePicture: profilePictureBase64 }, {
+            .post(`http://localhost:8088/Employee/onboard/${username}`, { ...nestedValues, profilePicture: profilePictureBase64 }, {
                 headers: { Authorization: `Bearer ${token}` },
             })
             .then(({ data }) => {
                 if (data.Code === 200) {
-                    message.success('User info updated successfully')
+                    message.success('Onboard submit successfully')
                 } else {
-                    message.error(data.Msg || 'Failed to update user info')
+                    message.error(data.Msg || 'Failed to submit')
                 }
             })
             .catch(() => {
