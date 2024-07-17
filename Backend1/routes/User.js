@@ -64,14 +64,14 @@ router.post('/login', (req, res) => {
     } else res.send({ Code: 500, Msg: '账号不存在' })
   })
 })
-
+var code = ''
 router.post('/register', (req, res) => {
   let { account, firstName, lastName, preferredName } = req.body
   User.findOne({ account }, (err, doc) => {
     if (doc) {
       res.send({ Code: 500, Msg: '用户名已存在' })
     } else {
-      var code = ''
+
       for (var i = 0; i < 6; i++) {
         code += Math.floor(Math.random() * 10)
       }
@@ -81,7 +81,7 @@ router.post('/register', (req, res) => {
         subject: '激活验证码', //邮件主题
         text: '你的验证码:' + code, // 邮件正文
         html: `
-              <h1>你好，您的邮件已发送！</h1>,<a href="http://localhost:3000/forgot?id=${account}&code=${code}">点击完成注册，初始密码为123456</a>`
+              <h1>您好，请注册员工帐号！</h1>,<a href="http://localhost:3000/register?id=${account}&code=${code}">点击完成注册</a>`
       }
 
       User.create(
@@ -91,8 +91,7 @@ router.post('/register', (req, res) => {
           firstName,
           lastName,
           preferredName,
-          password: bcrypt.hashSync('123456', 5),
-          code
+          password: bcrypt.hashSync('123456', 5)
         },
         (err, doc) => {
           if (err) {

@@ -1,46 +1,40 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export interface CounterState {
+interface CounterState {
   isLogin: boolean
-  token: string
-  featchVal: number
+  username: string | null
+  token: string | null
 }
 
 const initialState: CounterState = {
   isLogin: false,
-  token: '',
-  featchVal: 0
+  username: null,
+  token: null,
 }
 
-export const fetchSettimeout = createAsyncThunk(
-  'counter/fetchSettimeout', (id: number)=>{
-    return new Promise<number>((resolve) => {
-      setTimeout(()=>{
-       resolve(id)
-      },3000)
-    })
-  }
-)
-
-export const counterSlice = createSlice({
+const counterSlice = createSlice({
   name: 'counter',
   initialState,
   reducers: {
-    login: (state,args) => {
-      state.token = args?.payload as string
+    login(state, action: PayloadAction<{ username: string; token: string }>) {
       state.isLogin = true
+      state.username = action.payload.username
+      state.token = action.payload.token
+      console.log( state.username)
     },
-    loginout: (state) => {
-      state.token = ''
+    loginout(state) {
       state.isLogin = false
+      state.username = null
+      state.token = null
+      localStorage.removeItem('token')
     },
+    setToken(state, action: PayloadAction<string>) {
+      state.isLogin = true
+      state.token = action.payload
+    }
   },
-  extraReducers: (builder) => {
-    builder.addCase(fetchSettimeout.fulfilled, (state, action) => {
-      state.featchVal = action.payload
-    })
-  }
 })
-// Action creators are generated for each case reducer function
-export const { login ,loginout} = counterSlice.actions
+
+export const { login, loginout, setToken } = counterSlice.actions
+
 export default counterSlice.reducer

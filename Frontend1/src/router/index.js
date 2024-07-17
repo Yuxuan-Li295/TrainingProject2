@@ -7,7 +7,7 @@ import AppLayout from '../layout'
 
 const Home = lazy(() => import('../pages/index'))
 const Login = lazy(() => import('../pages/login'))
-const Regsiter = lazy(() => import('../pages/regsiter'))
+const Register = lazy(() => import('../pages/register'))
 const Forgot = lazy(() => import('../pages/forgot'))
 const Send = lazy(() => import('../pages/send'))
 const Update = lazy(() => import('../pages/update'))
@@ -16,6 +16,8 @@ const Apply = lazy(() => import('../pages/apply'))
 const User = lazy(() => import('../pages/user'))
 const UserInfo = lazy(() => import('../pages/userInfo'))
 const CreateUser = lazy(() => import('../pages/createUser'))
+const PersonalInfo = lazy(() => import('../pages/PersonalInfo'))
+const Onboard = lazy(() => import('../pages/onboard'))
 
 // 实现懒加载的用Suspense包裹 定义函数
 const lazyLoad = (children) => {
@@ -72,7 +74,8 @@ export const routers = [
           title: '生成注册'
         },
         element: lazyLoad(<CreateUser />)
-      }
+      },
+
     ]
   },
   {
@@ -84,8 +87,8 @@ export const routers = [
     element: lazyLoad(<Forgot />)
   },
   {
-    path: '/regsiter',
-    element: lazyLoad(<Regsiter />)
+    path: '/register',
+    element: lazyLoad(<Register />)
   },
   {
     path: '/send',
@@ -94,5 +97,20 @@ export const routers = [
   {
     path: '/update',
     element: lazyLoad(<Update />)
+  },
+
+  {
+    path: '/personal-info',
+    meta: {
+      title: '个人信息'
+    },
+    element: lazyLoad(<PersonalInfo />)
+  },
+  {
+    path: '/onboard',
+    meta: {
+      title: '个人信息'
+    },
+    element: lazyLoad(<Onboard />)
   }
 ]

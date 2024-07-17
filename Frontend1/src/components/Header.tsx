@@ -23,24 +23,24 @@ const Footer = () => {
           {/* <Search placeholder=" search" allowClear className="pc" /> */}
         </div>
         <div className="right">
-          <div
-            className="right-item"
-            onClick={() => {
-              if (isLogin) {
-                dispatch(loginout())
-                history('/login')
-              } else {
-                history('/')
-              }
-            }}
-          >
-            <UserOutlined style={{ fontSize: 20, marginRight: 10 }} />
-            <span className="item-name">{token || 'Sign in'} </span>
-          </div>
+            <div
+                className="right-item"
+                onClick={() => {
+                    if (isLogin) {
+                        dispatch(loginout())
+                        history('/login')
+                    } else {
+                        history('/')
+                    }
+                }}
+            >
+                <UserOutlined style={{fontSize: 20, marginRight: 10}}/>
+                <span className="item-name">{isLogin ? 'Log out' : 'Sign in'}</span>
+            </div>
         </div>
       </div>
-      <div className="mobile">
-        <Search placeholder=" search" allowClear />
+        <div className="mobile">
+            <Search placeholder=" search" allowClear />
       </div>
     </div>
   )

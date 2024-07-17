@@ -25,10 +25,10 @@ export default function AppLayout() {
   const [isInit, setIsInit] = useState<boolean>(false)
   const [breadcrumb, setBreadcrumb] = useState<IPathArrs[]>([])
   type MenuItem = Required<MenuProps>['items'][number];
-  const { isLogin } = useAppSelector((state: RootState) => state.counter)
+  const { isLogin, username } = useAppSelector((state: RootState) => state.counter)
 
   useEffect(() => {
-    if (!isLogin) {
+    if (!isLogin || username!=='hr') {
       history('/login')
     }
   }, [history, isLogin])

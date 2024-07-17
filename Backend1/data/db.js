@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://127.0.0.1:27017/b-cms", {
+const uri = "mongodb+srv://zwang570:sKC3XMs60g5qjNyJ@cluster0.2a4o8y9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+mongoose.connect(uri, {
   useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true,

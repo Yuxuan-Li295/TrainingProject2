@@ -60,14 +60,7 @@ const Home = () => {
         return `${record?.user?.workAuthorization?.title || '-'}`
       }
     },
-    {
-      title: '职称',
-      dataIndex: 'work',
-      key: 'work',
-      render: (_, record) => {
-        return `${record?.user?.workAuthorization?.title || '-'}`
-      }
-    },
+
     {
       title: '开始时间',
       dataIndex: 'starttime',
@@ -225,6 +218,7 @@ const Home = () => {
       render: (_, record) => {
         const { currentStep, receiptStatus, eadCardStatus, i983Status, i20Status, currentFeedback } = record?.onboardingStatus ?? {}
 
+        // @ts-ignore
         let step
         let refuse = `，您上次的提交已被拒绝，拒绝原因:${currentFeedback}`
         if (currentStep === currentVisaStepEnum.NOT_STARTED) {
@@ -263,9 +257,11 @@ const Home = () => {
               description="确定要发送通知吗?"
               okText="确定"
               onConfirm={() => {
+                // @ts-ignore
                 axios
                   .post('http://localhost:8088/User/sendEmail', {
                     userId: record.user?._id,
+                    // @ts-ignore
                     step
                   })
                   .then(({ data }: IResult) => {
