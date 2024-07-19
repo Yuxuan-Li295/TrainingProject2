@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {Button, Form, Input, message, FormProps, DatePicker, Upload, Select, Col, Row, Card} from 'antd'
+import { Button, Form, Input, message, FormProps, DatePicker, Upload, Select, Col, Row, Card } from 'antd'
 import axios from 'axios'
 import { useAppSelector } from '../hooks/store'
 import { IResult, UserDataType } from '../type'
@@ -7,7 +7,8 @@ import { UploadOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
 import WorkAuthorizationForm from './WorkAuthorizationForm'
-interface IForm extends Partial<UserDataType> {}
+import FileManagement from '../components/FileManagement'
+interface IForm extends Partial<UserDataType> { }
 
 const { Option } = Select
 
@@ -15,7 +16,7 @@ const PersonalInfo = () => {
     const [form] = Form.useForm()
     const [loading, setLoading] = useState<boolean>(false)
     const [userInfo, setUserInfo] = useState<UserDataType | null>(null)
-    const { isLogin,username, token } = useAppSelector(state => state.counter)
+    const { isLogin, username, token } = useAppSelector(state => state.counter)
     const [fileList, setFileList] = useState<any[]>([])
     const navigate = useNavigate()
 
@@ -151,7 +152,7 @@ const PersonalInfo = () => {
         // @ts-ignore
         delete nestedValues['workAuthorization.endDate']
         // @ts-ignore
-        if(nestedValues['workAuthorization.title']){// @ts-ignore
+        if (nestedValues['workAuthorization.title']) {// @ts-ignore
             nestedValues.workAuthorization.title = nestedValues['workAuthorization.title']
             // @ts-ignore
             delete nestedValues['workAuthorization.title']
@@ -281,6 +282,11 @@ const PersonalInfo = () => {
                             <WorkAuthorizationForm form={form} workAuthTitle={userInfo?.workAuthorization?.title} />
                         </Col>
                         <Col span={24}>
+                            <Form.Item label="Uploaded Documents">
+                                <FileManagement />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
                             <Form.Item>
                                 <Button type="primary" block htmlType="submit">
                                     Update Info
@@ -291,6 +297,7 @@ const PersonalInfo = () => {
                 </Form>
             </Card>
         </div>
-    )}
+    )
+}
 
 export default PersonalInfo
