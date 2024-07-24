@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Record = require('../data/models/Record')
+const User = require("../data/models/User");
 
 module.exports = router
 
@@ -8,8 +9,15 @@ const stepsMap = {
   receipt: 'receiptStatus',
   ead_card: 'eadCardStatus',
   i983: 'i983Status',
-  I20: 'i20Status'
+  i20: 'i20Status'
 }
+
+const currentVisaStepEnum = [
+  'receipt',
+  'ead_card',
+  'i983',
+  'i20',
+]
 router.post('/list', (req, res) => {
   let { firstName, lastName, preferredName, status } = req.body
 
@@ -35,7 +43,7 @@ router.post('/list', (req, res) => {
       if (err) {
         res.status(500).send(err)
       }
-      console.log(doc)
+      //console.log(doc)
       const list = doc.filter((item) => {
         let flag = true
         if (firstName) {
@@ -63,21 +71,46 @@ router.post('/list', (req, res) => {
       })
     })
 })
-router.post('/info', (req, res) => {
-  let { id } = req.body
-  Record.findOne({ _id: id })
-    .populate('user')
-    .exec((err, doc) => {
-      if (err) {
-        res.status(500).send(err)
+router.post('/info', async (req, res) => {
+  const { id, username } = req.body;
+
+  try {
+    // 如果提供了id，则查找特定的记录并填充user字段
+    if (id) {
+      const record = await Record.findOne({ _id: id })
+          .populate('user')
+          .exec();
+
+      if (!record) {
+        return res.status(404).send({ Code: 404, Msg: '记录未找到' });
       }
-      res.send({
+
+      return res.send({
         Code: 200,
         Msg: '请求成功',
-        data: doc
-      })
-    })
-})
+        data: record
+      });
+    }
+    if (username) {
+      const user = await User.findOne({ account: username }).exec();
+      if (!user) {
+        return res.status(404).send({ Code: 404, Msg: '用户未找到' });
+      }
+
+      const records = await Record.find({ user: user._id }).exec();
+
+      return res.send({
+        Code: 200,
+        Msg: '请求成功',
+        data: records
+      });
+    }
+    res.status(400).send({ Code: 400, Msg: '缺少参数：id 或 username' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ Code: 500, Msg: '服务器内部错误', error: err.message });
+  }
+});
 
 router.post('/agree', (req, res) => {
   let { id } = req.body
@@ -88,14 +121,17 @@ router.post('/agree', (req, res) => {
     const currentStep = doc.onboardingStatus.currentStep
 
     if (currentStep === 'not_started' || currentStep === 'complete') {
+
       res.send({
         Code: 500,
         Msg: '不可操作'
       })
     } else {
+      console.log(currentStep)
       if (doc.onboardingStatus[`${stepsMap[currentStep]}`] === 'submitted') {
+
         const steps = Object.values(stepsMap)
-        const index = steps.findIndex((item) => `${stepsMap[currentStep]}`)
+        const index = steps.findIndex((item) => JSON.stringify(item) === JSON.stringify(stepsMap[currentStep]));
         Record.updateOne(
           { _id: id },
           {
@@ -104,7 +140,7 @@ router.post('/agree', (req, res) => {
                 ...doc.onboardingStatus,
                 [`${stepsMap[currentStep]}`]: 'approved',
                 currentStep:
-                  index + 1 >= steps.length ? 'complete' : steps[index + 1],
+                  index + 1 >= steps.length ? 'complete' : currentVisaStepEnum[index + 1],
                 currentFeedback: ''
               },
               status: index + 1 >= steps.length ? 'complete' : 'approved'
@@ -115,6 +151,7 @@ router.post('/agree', (req, res) => {
           }
         )
       } else {
+
         res.send({
           Code: 500,
           Msg: '不可操作'
@@ -164,3 +201,50 @@ router.post('/refuse', (req, res) => {
     }
   })
 })
+
+const visaStepStatusEnum = {
+  NOT_SUBMITTED: 'not_submitted',
+  SUBMITTED: 'submitted',
+  APPROVED: 'approved',
+  REJECTED: 'rejected'
+};
+
+const documentsFieldMap = {
+  receipt: 'RECEIPT',
+  ead_card: 'EAD_CARD',
+  i983: 'I983_FORM',
+  i20: 'I20_FORM',
+  others: 'OTHERS'
+};
+
+router.post('/updateRecord', async (req, res) => {
+  const { username, currentStep, uploadedFiles } = req.body;
+
+  try {
+    const user = await User.findOne({ account: username }).exec();
+    if (!user) {
+      return res.status(404).send({ Code: 404, Msg: '用户未找到' });
+    }
+
+    const record = await Record.findOne({ user: user._id }).exec();
+    if (!record) {
+      return res.status(404).send({ Code: 404, Msg: '记录未找到' });
+    }
+
+    // 确保 currentStep 是一个有效的步骤
+    if (!documentsFieldMap[currentStep]) {
+      return res.status(400).send({ Code: 400, Msg: '无效的 currentStep' });
+    }
+
+    // 更新Record的状态和文件列表
+    record.onboardingStatus[`${currentStep}Status`] = visaStepStatusEnum.SUBMITTED;
+    record.documents[documentsFieldMap[currentStep]] = uploadedFiles;
+
+    await record.save();
+
+    return res.send({ Code: 200, Msg: '记录更新成功' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ Code: 500, Msg: '服务器内部错误', error: err.message });
+  }
+});

@@ -79,11 +79,41 @@ export interface UserDataType {
   }
 }
 export interface IDocuments {
-  RECEIPT?:string[],
-  EAD_CARD?:string[],
-  I983_FORM?:string[],
-  I20_FORM?:string[],
-  OTHERS?:string[],
+  RECEIPT?:{ type: [
+      {
+        name: { type: String, required: true },
+        id: { type: String, required: true }
+      }
+    ],
+    default: [] },
+  EAD_CARD?:{ type: [
+      {
+        name: { type: String, required: true },
+        id: { type: String, required: true }
+      }
+    ],
+    default: [] },
+  I983_FORM?:{ type: [
+      {
+        name: { type: String, required: true },
+        id: { type: String, required: true }
+      }
+    ],
+    default: [] },
+  I20_FORM?:{ type: [
+      {
+        name: { type: String, required: true },
+        id: { type: String, required: true }
+      }
+    ],
+    default: [] },
+  OTHERS?:{ type: [
+      {
+        name: { type: String, required: true },
+        id: { type: String, required: true }
+      }
+    ],
+    default: [] },
 }
 
 export interface DataType {

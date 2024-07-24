@@ -24,24 +24,42 @@ const currentVisaStepEnum = {
   COMPLETE: 'complete' // 完成所有步骤
 }
 
-const documentDetailSchema = new mongoose.Schema({
-  documentURL: { type: String, required: true },
-  status: {
-    type: String,
-    enum: ['pending', 'submitted', 'approved', 'rejected'],
-    default: 'pending'
-  },
-  uploadedDate: { type: Date, default: Date.now },
-  lastUpdated: { type: Date, default: Date.now },
-  description: { type: String, default: '' } // Optional description for the document
-})
-
 const documentsSchema = new mongoose.Schema({
-  RECEIPT: { type: [documentDetailSchema], default: [] },
-  EAD_CARD: { type: [documentDetailSchema], default: [] },
-  I983_FORM: { type: [documentDetailSchema], default: [] },
-  I20_FORM: { type: [documentDetailSchema], default: [] },
-  OTHERS: { type: [documentDetailSchema], default: [] } // For miscellaneous or additional documents
+  RECEIPT: { type: [
+      {
+        name: { type: String, required: true },
+        id: { type: String, required: true }
+      }
+    ],
+    default: [] },
+  EAD_CARD: { type: [
+      {
+        name: { type: String, required: true },
+        id: { type: String, required: true }
+      }
+    ],
+    default: [] },
+  I983_FORM: { type: [
+      {
+        name: { type: String, required: true },
+        id: { type: String, required: true }
+      }
+    ],
+    default: [] },
+  I20_FORM: { type: [
+      {
+        name: { type: String, required: true },
+        id: { type: String, required: true }
+      }
+    ],
+    default: [] },
+  OTHERS: { type: [
+      {
+        name: { type: String, required: true },
+        id: { type: String, required: true }
+      }
+    ],
+    default: [] } // For miscellaneous or additional documents
 })
 
 const schema = new mongoose.Schema(

@@ -18,6 +18,7 @@ const UserInfo = lazy(() => import('../pages/userInfo'))
 const CreateUser = lazy(() => import('../pages/createUser'))
 const PersonalInfo = lazy(() => import('../pages/PersonalInfo'))
 const Onboard = lazy(() => import('../pages/onboard'))
+const UserVisaStatus = lazy(() => import('../pages/UserVisaStatus'))
 
 // 实现懒加载的用Suspense包裹 定义函数
 const lazyLoad = (children) => {
@@ -109,8 +110,15 @@ export const routers = [
   {
     path: '/onboard',
     meta: {
-      title: '个人信息'
+      title: 'onboard'
     },
     element: lazyLoad(<Onboard />)
+  },
+  {
+    path: '/visa-status',
+    meta: {
+      title: 'onboard'
+    },
+    element: lazyLoad(<UserVisaStatus />)
   }
 ]

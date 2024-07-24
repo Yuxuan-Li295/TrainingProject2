@@ -6,8 +6,10 @@ import { IResult, UserDataType } from '../type'
 import { UploadOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
-import WorkAuthorizationForm from './WorkAuthorizationForm'
+import WorkAuthorizationForm from '../components/WorkAuthorizationForm'
 import FileManagement from '../components/FileManagement'
+import Footer from '../components/Footer'
+import Header from '../components/Header'
 interface IForm extends Partial<UserDataType> { }
 
 const { Option } = Select
@@ -28,7 +30,7 @@ const PersonalInfo = () => {
             setLoading(true)
             axios
                 .post<{ Code: number; Msg: string; data: UserDataType }>(`http://localhost:8088/Employee/info`, { username }, {
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers: { authorization: token },
                 })
                 .then(({ data }) => {
                     if (data.Code === 200) {
@@ -160,7 +162,7 @@ const PersonalInfo = () => {
 
         axios
             .post(`http://localhost:8088/Employee/update/${username}`, { ...nestedValues, profilePicture: profilePictureBase64 }, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { authorization: token },
             })
             .then(({ data }) => {
                 if (data.Code === 200) {
@@ -180,6 +182,7 @@ const PersonalInfo = () => {
 
     return (
         <div className="page-container">
+            <Header />
             <Card
                 title="Personal Information"
                 bordered={false}
@@ -282,7 +285,7 @@ const PersonalInfo = () => {
                             <WorkAuthorizationForm form={form} workAuthTitle={userInfo?.workAuthorization?.title} />
                         </Col>
                         <Col span={24}>
-                            <Form.Item label="Uploaded Documents">
+                            <Form.Item label="Upload Driver’s license and Work authorization">
                                 <FileManagement />
                             </Form.Item>
                         </Col>
@@ -296,6 +299,7 @@ const PersonalInfo = () => {
                     </Row>
                 </Form>
             </Card>
+            <Footer />
         </div>
     )
 }

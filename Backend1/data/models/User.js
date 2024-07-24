@@ -30,6 +30,15 @@ const schema = new mongoose.Schema(
       startDate: { type: Date, default: Date.now },
       endDate: { type: Date, default: Date.now }
     },
+      userDocuments: {
+          type: [
+              {
+                  name: { type: String, required: true },
+                  id: { type: String, required: true }
+              }
+          ],
+          default: []
+      },
   },
   { timestamps: true, versionKey: false }
 )

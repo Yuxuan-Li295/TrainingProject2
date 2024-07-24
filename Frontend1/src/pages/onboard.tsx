@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import {Button, Form, Input, message, FormProps, DatePicker, Upload, Select, Col, Row, Card} from 'antd'
+import { Button, Form, Input, message, FormProps, DatePicker, Upload, Select, Col, Row, Card } from 'antd'
 import axios from 'axios'
 import { useAppSelector } from '../hooks/store'
 import { IResult, UserDataType } from '../type'
 import { UploadOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
-import WorkAuthorizationForm from './WorkAuthorizationForm'
-interface IForm extends Partial<UserDataType> {}
+import WorkAuthorizationForm from '../components/WorkAuthorizationForm'
+import FileManagement from '../components/FileManagement'
+import Footer from '../components/Footer'
+import Header from '../components/Header'
+interface IForm extends Partial<UserDataType> { }
 
 const { Option } = Select
 
@@ -15,16 +18,19 @@ const Onboard = () => {
     const [form] = Form.useForm()
     const [loading, setLoading] = useState<boolean>(false)
     const [userInfo, setUserInfo] = useState<UserDataType | null>(null)
-    const {username, token } = useAppSelector(state => state.counter)
+    const { isLogin, username, token } = useAppSelector(state => state.counter)
     const [fileList, setFileList] = useState<any[]>([])
     const navigate = useNavigate()
 
     useEffect(() => {
+        if (!isLogin) {
+            navigate('/login')
+        }
         if (username) {
             setLoading(true)
             axios
                 .post<{ Code: number; Msg: string; data: UserDataType }>(`http://localhost:8088/Employee/info`, { username }, {
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers: { authorization: token },
                 })
                 .then(({ data }) => {
                     if (data.Code === 200) {
@@ -148,21 +154,22 @@ const Onboard = () => {
         // @ts-ignore
         delete nestedValues['workAuthorization.endDate']
         // @ts-ignore
-        if(nestedValues['workAuthorization.title']){// @ts-ignore
+        if (nestedValues['workAuthorization.title']) {// @ts-ignore
             nestedValues.workAuthorization.title = nestedValues['workAuthorization.title']
             // @ts-ignore
             delete nestedValues['workAuthorization.title']
         }
 
         axios
-            .post(`http://localhost:8088/Employee/onboard/${username}`, { ...nestedValues, profilePicture: profilePictureBase64 }, {
-                headers: { Authorization: `Bearer ${token}` },
+            .post(`http://localhost:8088/Employee/update/${username}`, { ...nestedValues, profilePicture: profilePictureBase64 }, {
+                headers: { authorization: token },
             })
             .then(({ data }) => {
                 if (data.Code === 200) {
-                    message.success('Onboard submit successfully')
+                    message.success('User info submitted successfully')
+                    navigate('/personal-info')
                 } else {
-                    message.error(data.Msg || 'Failed to submit')
+                    message.error(data.Msg || 'Failed to update user info')
                 }
             })
             .catch(() => {
@@ -176,8 +183,9 @@ const Onboard = () => {
 
     return (
         <div className="page-container">
+            <Header />
             <Card
-                title="Personal Information"
+                title="Submit Personal Information"
                 bordered={false}
                 style={{ maxWidth: 800, margin: '0 auto', marginTop: 20 }}
             >
@@ -278,6 +286,11 @@ const Onboard = () => {
                             <WorkAuthorizationForm form={form} workAuthTitle={userInfo?.workAuthorization?.title} />
                         </Col>
                         <Col span={24}>
+                            <Form.Item label="Upload Driver’s license and Work authorization">
+                                <FileManagement />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
                             <Form.Item>
                                 <Button type="primary" block htmlType="submit">
                                     Submit Info
@@ -287,7 +300,9 @@ const Onboard = () => {
                     </Row>
                 </Form>
             </Card>
+            <Footer />
         </div>
-    )}
+    )
+}
 
 export default Onboard
