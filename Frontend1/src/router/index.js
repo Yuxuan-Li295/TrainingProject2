@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom';
 import AppLayout from '../layout';
 import UserLayout from '../layout/UserLayout';
 
-const Home = lazy(() => import('../pages/index'));
 const Login = lazy(() => import('../pages/login'));
 const Register = lazy(() => import('../pages/register'));
 const Forgot = lazy(() => import('../pages/forgot'));
@@ -28,20 +27,20 @@ export const routers = [
     path: '/',
     element: <AppLayout />,
     meta: {
-      title: '首页'
+      title: 'Home Page'
     },
     children: [
       {
         index: true,
         element: <Navigate to="/user/list" replace />,
         meta: {
-          title: '员工档案'
+          title: 'Employee Document'
         }
       },
       {
         path: '/user/list',
         meta: {
-          title: '员工档案'
+          title: 'Employee Document'
         },
         element: lazyLoad(<User />)
       },
@@ -55,21 +54,21 @@ export const routers = [
       {
         path: '/sign/list',
         meta: {
-          title: '签证状态管理'
+          title: 'Visa Status Management'
         },
         element: lazyLoad(<Sign />)
       },
       {
         path: '/apply/list',
         meta: {
-          title: '招聘管理'
+          title: 'Hiring Management'
         },
         element: lazyLoad(<Apply />)
       },
       {
         path: '/create/user',
         meta: {
-          title: '生成注册'
+          title: 'Generate Token'
         },
         element: lazyLoad(<CreateUser />)
       },
@@ -102,14 +101,14 @@ export const routers = [
       {
         path: 'personal-info',
         meta: {
-          title: '个人信息'
+          title: 'Personal Information'
         },
         element: lazyLoad(<PersonalInfo />)
       },
       {
         path: 'visa-status',
         meta: {
-          title: '签证状态'
+          title: 'Visa Status'
         },
         element: lazyLoad(<UserVisaStatus />)
       }

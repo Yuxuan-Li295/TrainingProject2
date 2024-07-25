@@ -139,7 +139,7 @@ const FileManagement = () => {
                 <iframe
                     src={fileUrl}
                     style={{ width: '100%', height: '500px', border: 'none' }}
-                    title="文件预览"
+                    title="File Preview"
                 ></iframe>
             </Modal>
         </div>

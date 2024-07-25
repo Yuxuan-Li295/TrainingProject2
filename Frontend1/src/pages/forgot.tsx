@@ -34,7 +34,7 @@ const Update = () => {
           setTimeout(() => {
           }, 1000)
         } else {
-          message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误')
+          message.error(typeof data.Msg === 'string' ? data.Msg : 'Unknwon server error')
         }
       }).catch(() => {
         //

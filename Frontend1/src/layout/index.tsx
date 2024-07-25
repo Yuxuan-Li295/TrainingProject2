@@ -34,7 +34,7 @@ export default function AppLayout() {
   }, [history, isLogin])
 
   useEffect(() => {
-    const routes = matchRoutes(routers, location.pathname) // 返回匹配到的路由数组对象，每一个对象都是一个路由对象
+    const routes = matchRoutes(routers, location.pathname) // Returns an array of mached route objects each of which is a route object
     const pathArrs: IPathArrs[] = []
     const pathArr: string[] = []
     if (routes !== null) {
@@ -55,40 +55,40 @@ export default function AppLayout() {
   const items: MenuItem[] = [
     {
       key: '/user',
-      label: '员工档案',
+      label: 'Employee Records',
       icon: <UserOutlined />,
       children: [
         {
           key: '/user/list',
-          label: '用户信息',
+          label: 'User Information',
         },
       ]
     },
     {
       key: '/sign',
-      label: '签证状态管理',
+      label: 'Visa Status Management',
       icon: <LaptopOutlined />,
       children: [
         {
           key: '/sign/list',
-          label: '签证状态',
+          label: 'Visa Status',
         },
       ]
     },
     {
       key: '/apply',
-      label: '招聘管理',
+      label: 'Hiring Management',
       icon: <LaptopOutlined />,
       children: [
         {
           key: '/apply/list',
-          label: '入职申请',
+          label: 'Onboard Application',
         },
       ]
     },
     {
       key: '/create/user',
-      label: '注册员工令牌',
+      label: 'Employee Registration Token',
       icon: <LaptopOutlined />,
 
     }

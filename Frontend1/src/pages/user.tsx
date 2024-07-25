@@ -13,7 +13,7 @@ const Home = () => {
 
   const columns: TableProps<UserDataType>['columns'] = [
     {
-      title: '姓名',
+      title: 'Name',
       dataIndex: 'name',
       key: 'name',
       render: (_, record) => <Button type="link" onClick={() => {
@@ -21,7 +21,7 @@ const Home = () => {
       }}>{record?.preferredName}</Button>
     },
     {
-      title: '社会保险号',
+      title: 'SSN',
       dataIndex: 'ssn',
       key: 'ssn',
       render: (_, record) => {
@@ -29,7 +29,7 @@ const Home = () => {
       }
     },
     {
-      title: '工作授权头衔',
+      title: 'Work Authorizaiton Title',
       dataIndex: 'address',
       key: 'address',
       render: (_, record) => {
@@ -37,7 +37,7 @@ const Home = () => {
       }
     },
     {
-      title: '电话号码',
+      title: 'Phone number',
       dataIndex: 'address',
       key: 'address',
       render: (_, record) => {
@@ -45,7 +45,7 @@ const Home = () => {
       }
     },
     {
-      title: '电子邮箱',
+      title: 'Email',
       dataIndex: 'email',
       key: 'email',
       render: (_, record) => {
@@ -53,13 +53,13 @@ const Home = () => {
       }
     },
     {
-      title: '操作',
+      title: 'Operation',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
           <Button type="link" onClick={() => {
             history(`/user/info/${record._id}`)
-          }}>查看</Button>
+          }}>Search</Button>
 
         </Space>
       )
@@ -79,7 +79,7 @@ const Home = () => {
           setList(data.data)
           setLoad(false)
         } else {
-          message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误')
+          message.error(typeof data.Msg === 'string' ? data.Msg : 'Unknwon Server error')
         }
       }).catch(() => {
         //
@@ -105,7 +105,7 @@ const Home = () => {
         </Col>
         <Button type="primary" onClick={() => {
           setLoad(true)
-        }}>查询</Button>
+        }}>Search</Button>
       </Row>
       <Table columns={columns} dataSource={list} rowKey="_id" />
     </div>

@@ -6,7 +6,7 @@ import { routers } from "../router";
 import { IdcardOutlined, UserOutlined } from "@ant-design/icons";
 import React from "react";
 import Header from '../components/Header';
-import Footer from '../components/Footer'; // 引入 Footer 组件
+import Footer from '../components/Footer'; 
 
 const { Content, Sider } = Layout;
 

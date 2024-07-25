@@ -97,7 +97,7 @@ const Home = () => {
           setInfo(data?.data)
 
         } else {
-          message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误')
+          message.error(typeof data.Msg === 'string' ? data.Msg : 'Unknwon Server error')
         }
       }).catch(() => {
         //
@@ -107,7 +107,7 @@ const Home = () => {
   return (
     <Descriptions style={{ background: '#fff', padding: 20, borderRadius: 5 }}
       bordered
-      title="用户详情"
+      title="User Details"
       column={4}
       items={borderedItems}
     />

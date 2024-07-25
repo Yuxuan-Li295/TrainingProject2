@@ -17,7 +17,6 @@ const Login = () => {
   const [form] = Form.useForm()
   const history = useNavigate()
   const dispatch = useAppDispatch()
-  //const { isLogin } = useAppSelector(state => state.counter)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -25,12 +24,6 @@ const Login = () => {
       dispatch(setToken(token))
     }
   }, [dispatch])
-
-  // useEffect(() => {
-  //   if (isLogin) {
-  //     history('/personal-info')
-  //   }
-  // }, [isLogin, history])
 
   const onFinish: FormProps<IForm>['onFinish'] = ({ username, password }) => {
     const account:string = username;

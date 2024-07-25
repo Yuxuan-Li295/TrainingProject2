@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Button, Form, Input, message, FormProps, DatePicker, Upload, Select, Col, Row, Card } from 'antd'
 import axios from 'axios'
 import { useAppSelector } from '../hooks/store'
-import { IResult, UserDataType } from '../type'
+import { UserDataType } from '../type'
 import { UploadOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
 import WorkAuthorizationForm from '../components/WorkAuthorizationForm'
 import FileManagement from '../components/FileManagement'
-import Footer from '../components/Footer'
 
 interface IForm extends Partial<UserDataType> { }
 

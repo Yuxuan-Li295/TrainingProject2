@@ -21,15 +21,15 @@ import { DataType, IResult, IQuery, currentVisaStepEnum, visaStepStatusEnum, vis
 import { DownloadOutlined, EyeOutlined } from '@ant-design/icons';
 const options = [
   {
-    label: '全部',
+    label: 'All',
     value: ''
   },
   {
-    label: '进行中',
+    label: 'In process',
     value: '1'
   },
   {
-    label: '已完成',
+    label: 'Completed',
     value: 'complete'
   }
 ];
@@ -80,31 +80,31 @@ const Home = () => {
 
   const columns: TableProps<DataType>['columns'] = [
     {
-      title: '姓名',
+      title: 'Name',
       dataIndex: 'name',
       key: 'name',
       render: (_, record) => `${record?.user?.preferredName}`
     },
     {
-      title: '工作授权',
+      title: 'Work Authorization',
       dataIndex: 'empower',
       key: 'empower',
       render: (_, record) => `${record?.user?.workAuthorization?.title || '-'}`
     },
     {
-      title: '开始时间',
+      title: 'Start time',
       dataIndex: 'starttime',
       key: 'starttime',
       render: (_, record) => `${new Date(+(record?.starttime as string)).toLocaleDateString()}`
     },
     {
-      title: '结束时间',
+      title: 'End time',
       dataIndex: 'endtime',
       key: 'endtime',
       render: (_, record) => `${new Date(+(record?.endtime as string)).toLocaleDateString()}`
     },
     {
-      title: '剩余天数',
+      title: 'Remaining days',
       dataIndex: 'day',
       key: 'day'
     },
@@ -260,7 +260,7 @@ const Home = () => {
       )
     },
     {
-      title: '下一步行动',
+      title: 'Next Step',
       dataIndex: 'next',
       key: 'next',
       render: (_, record) => {
@@ -298,7 +298,7 @@ const Home = () => {
       }
     },
     {
-      title: '操作',
+      title: 'Operation',
       key: 'action',
       render: (_, record) => {
         const { currentStep, receiptStatus, eadCardStatus, i983Status, i20Status, currentFeedback } = record?.onboardingStatus ?? {};
@@ -306,7 +306,7 @@ const Home = () => {
 
         //@ts-ignore
         let step;
-        let refuse = `，您上次的提交已被拒绝，拒绝原因:${currentFeedback}`;
+        let refuse = `，Your last submission has been rejected, the reason for rejection is:${currentFeedback}`;
         if (currentStep === currentVisaStepEnum.NOT_STARTED) {
           step = visaStepNextEnum.NOT_STARTED;
         } else if (currentStep === currentVisaStepEnum.RECEIPT) {
@@ -339,9 +339,9 @@ const Home = () => {
           return (
               <Space size="middle">
                 <Popconfirm
-                    title="提示"
-                    description="确定要发送通知吗?"
-                    okText="确定"
+                    title="Hint"
+                    description="Are you sure to send the notice?"
+                    okText="OK"
                     onConfirm={() => {
                       axios
                           .post('http://localhost:8088/User/sendEmail', {
@@ -352,18 +352,18 @@ const Home = () => {
                           })
                           .then(({ data }: IResult) => {
                             if (data.Code === 200) {
-                              message.success("发送成功");
+                              message.success("Message sent successfully");
                             } else {
-                              message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误');
+                              message.error(typeof data.Msg === 'string' ? data.Msg : 'Unknown server error');
                             }
                           })
                           .catch(() => {
                             //
                           });
                     }}
-                    cancelText="取消"
+                    cancelText="Cancel"
                 >
-                  <Button type="link">发送通知</Button>
+                  <Button type="link">Send notification</Button>
                 </Popconfirm>
               </Space>
           );
@@ -385,7 +385,7 @@ const Home = () => {
             setList(data.data.list);
             setLoad(false);
           } else {
-            message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误');
+            message.error(typeof data.Msg === 'string' ? data.Msg : 'Unknown server error');
           }
         })
         .catch(() => {
@@ -426,7 +426,7 @@ const Home = () => {
                 setLoad(true);
               }}
           >
-            查询
+            Search
           </Button>
         </Row>
         <Radio.Group
@@ -447,7 +447,7 @@ const Home = () => {
           <iframe
               src={fileUrl}
               style={{ width: '100%', height: '500px', border: 'none' }}
-              title="文件预览"
+              title="File Preview"
           ></iframe>
         </Modal>
       </div>

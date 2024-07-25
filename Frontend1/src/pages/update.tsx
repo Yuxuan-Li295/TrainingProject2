@@ -24,7 +24,7 @@ const Update = () => {
           setTimeout(() => {
           }, 1000)
         } else {
-          message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误')
+          message.error(typeof data.Msg === 'string' ? data.Msg : 'Unknown server error')
         }
       }).catch(() => {
         //
@@ -52,7 +52,7 @@ const Update = () => {
             rules={[
               {
                 type: 'email',
-                message: '请输入合法的邮箱地址！'
+                message: 'Please enter a valid email address！'
               },
               { required: true, message: 'Please input your email!' }
             ]}

@@ -28,10 +28,10 @@ const Home = () => {
       })
       .then(({ data }: IResult) => {
         if (data.Code === 200) {
-          message.success('注册令牌发送成功')
+          message.success('Registration token sent successfully')
           form.resetFields()
         } else {
-          message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误')
+          message.error(typeof data.Msg === 'string' ? data.Msg : 'Unknown server error')
         }
       }).catch(() => {
         //
@@ -47,7 +47,7 @@ const Home = () => {
           rules={[
             {
               type: 'email',
-              message: '请输入合法的邮箱地址！'
+              message: 'Please enter a valid email address！'
             },
             { required: true, message: 'Please input your email!' }
           ]}

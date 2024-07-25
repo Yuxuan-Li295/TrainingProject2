@@ -4,8 +4,6 @@ import axios from 'axios';
 import { useAppSelector } from '../hooks/store';
 import { UploadOutlined, DownloadOutlined, EyeOutlined } from '@ant-design/icons';
 import { DataType, currentVisaStepEnum, IResult, visaStepStatusEnum } from '../type';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 
 const currentVisaStepText = {
     not_started: 'Onboarding Application Phase',
