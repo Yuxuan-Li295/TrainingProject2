@@ -227,6 +227,16 @@ const UserVisaStatus = () => {
                         Feedback: {currentFeedback}
                     </div>
                 )}
+                {stepStatus === 'Submitted' && (
+                    <div style={{ color: 'red', fontWeight: 'bold', marginTop: '10px' }}>
+                        Waiting for HR to approve your document
+                    </div>
+                )}
+                {stepStatus === 'Not Submitted' && (
+                    <div style={{ color: 'red', fontWeight: 'bold', marginTop: '10px' }}>
+                        Please upload a copy of your document
+                    </div>
+                )}
                 {isUploadable && (
                     <div style={{ marginBottom: 16 }}>
                         <Upload
