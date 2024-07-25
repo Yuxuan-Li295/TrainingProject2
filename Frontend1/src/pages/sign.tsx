@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Button,
@@ -12,12 +13,12 @@ import {
   RadioChangeEvent,
   TableProps,
   message,
-  List
+  List,
+  Modal
 } from 'antd';
 import axios from 'axios';
 import { DataType, IResult, IQuery, currentVisaStepEnum, visaStepStatusEnum, visaStepNextEnum } from '../type';
-import {DownloadOutlined, EyeOutlined} from "@ant-design/icons";
-
+import { DownloadOutlined, EyeOutlined } from '@ant-design/icons';
 const options = [
   {
     label: '全部',
@@ -38,7 +39,8 @@ const Home = () => {
   const [list, setList] = useState<DataType[]>([]);
   const [load, setLoad] = useState<boolean>(true);
   const [status, setStatus] = useState('');
-
+  const [fileUrl, setFileUrl] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const onChange = ({ target: { value } }: RadioChangeEvent) => {
     setStatus(value);
     setLoad(true);
@@ -67,8 +69,13 @@ const Home = () => {
   };
 
   const handlePreview = (id: string, name: string) => {
-    const fileUrl = `http://localhost:8088/Files/preview/${id}?name=${encodeURIComponent(name.endsWith('.pdf') ? name : `${name}.pdf`)}`;
-    window.open(fileUrl, '_blank');
+    setFileUrl(`http://localhost:8088/Files/preview/${id}?name=${encodeURIComponent(name.endsWith('.pdf') ? name : `${name}.pdf`)}`);
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setFileUrl('');
   };
 
   const columns: TableProps<DataType>['columns'] = [
@@ -76,33 +83,25 @@ const Home = () => {
       title: '姓名',
       dataIndex: 'name',
       key: 'name',
-      render: (_, record) => {
-        return `${record?.user?.preferredName}`;
-      }
+      render: (_, record) => `${record?.user?.preferredName}`
     },
     {
       title: '工作授权',
       dataIndex: 'empower',
       key: 'empower',
-      render: (_, record) => {
-        return `${record?.user?.workAuthorization?.title || '-'}`;
-      }
+      render: (_, record) => `${record?.user?.workAuthorization?.title || '-'}`
     },
     {
       title: '开始时间',
       dataIndex: 'starttime',
       key: 'starttime',
-      render: (_, record) => {
-        return `${new Date(+(record?.starttime as string)).toLocaleDateString()}`;
-      }
+      render: (_, record) => `${new Date(+(record?.starttime as string)).toLocaleDateString()}`
     },
     {
       title: '结束时间',
       dataIndex: 'endtime',
       key: 'endtime',
-      render: (_, record) => {
-        return `${new Date(+(record?.endtime as string)).toLocaleDateString()}`;
-      }
+      render: (_, record) => `${new Date(+(record?.endtime as string)).toLocaleDateString()}`
     },
     {
       title: '剩余天数',
@@ -115,18 +114,21 @@ const Home = () => {
       key: 'RECEIPT',
       render: (_, record) => (
           <List
-              // @ts-ignore
+              //@ts-ignore
               dataSource={record?.documents?.RECEIPT}
               renderItem={item => (
                   <List.Item
                       actions={[
-                        <Button icon={<DownloadOutlined />} onClick={() => handleDownload(// @ts-ignore
+                        <Button icon={<DownloadOutlined />} onClick={() => handleDownload(
+                            //@ts-ignore
                             item.id, item.name)}>Download</Button>,
-                        <Button icon={<EyeOutlined />} onClick={() => handlePreview(// @ts-ignore
+                        <Button icon={<EyeOutlined />} onClick={() => handlePreview(
+                            //@ts-ignore
                             item.id, item.name)}>Preview</Button>
                       ]}
                   >
-                    {// @ts-ignore
+                    {
+                      //@ts-ignore
                       item.name}
                   </List.Item>
               )}
@@ -139,18 +141,22 @@ const Home = () => {
       key: 'EAD_CARD',
       render: (_, record) => (
           <List
-              // @ts-ignore
+
+              //@ts-ignore
               dataSource={record?.documents?.EAD_CARD}
               renderItem={item => (
                   <List.Item
                       actions={[
-                        <Button icon={<DownloadOutlined />} onClick={() => handleDownload(// @ts-ignore
+                        <Button icon={<DownloadOutlined />} onClick={() => handleDownload(
+                            //@ts-ignore
                             item.id, item.name)}>Download</Button>,
-                        <Button icon={<EyeOutlined />} onClick={() => handlePreview(// @ts-ignore
+                        <Button icon={<EyeOutlined />} onClick={() => handlePreview(
+                            //@ts-ignore
                             item.id, item.name)}>Preview</Button>
                       ]}
                   >
-                    {// @ts-ignore
+                    {
+                      //@ts-ignore
                       item.name}
                   </List.Item>
               )}
@@ -163,21 +169,22 @@ const Home = () => {
       key: 'I983_FORM',
       render: (_, record) => (
           <List
-              // @ts-ignore
+
+              //@ts-ignore
               dataSource={record?.documents?.I983_FORM}
               renderItem={item => (
                   <List.Item
                       actions={[
                         <Button icon={<DownloadOutlined />} onClick={() => handleDownload(
-                            // @ts-ignore
+                            //@ts-ignore
                             item.id, item.name)}>Download</Button>,
                         <Button icon={<EyeOutlined />} onClick={() => handlePreview(
-                            // @ts-ignore
+                            //@ts-ignore
                             item.id, item.name)}>Preview</Button>
                       ]}
                   >
                     {
-                      // @ts-ignore
+                      //@ts-ignore
                       item.name}
                   </List.Item>
               )}
@@ -190,19 +197,22 @@ const Home = () => {
       key: 'I20_FORM',
       render: (_, record) => (
           <List
-              // @ts-ignore
+
+              //@ts-ignore
               dataSource={record?.documents?.I20_FORM}
               renderItem={item => (
                   <List.Item
                       actions={[
                         <Button icon={<DownloadOutlined />} onClick={() => handleDownload(
-                            // @ts-ignore
+                            //@ts-ignore
                             item.id, item.name)}>Download</Button>,
-                        <Button icon={<EyeOutlined />} onClick={() => handlePreview(// @ts-ignore
+                        <Button icon={<EyeOutlined />} onClick={() => handlePreview(
+                            //@ts-ignore
                             item.id, item.name)}>Preview</Button>
                       ]}
                   >
-                    {// @ts-ignore
+                    {
+                      //@ts-ignore
                       item.name}
                   </List.Item>
               )}
@@ -253,7 +263,8 @@ const Home = () => {
       render: (_, record) => {
         const { currentStep, receiptStatus, eadCardStatus, i983Status, i20Status, currentFeedback } = record?.onboardingStatus ?? {};
 
-        // @ts-ignore
+
+        //@ts-ignore
         let step;
         let refuse = `，您上次的提交已被拒绝，拒绝原因:${currentFeedback}`;
         if (currentStep === currentVisaStepEnum.NOT_STARTED) {
@@ -295,7 +306,8 @@ const Home = () => {
                       axios
                           .post('http://localhost:8088/User/sendEmail', {
                             userId: record.user?._id,
-                            // @ts-ignore
+
+                            //@ts-ignore
                             step
                           })
                           .then(({ data }: IResult) => {
@@ -386,8 +398,20 @@ const Home = () => {
             buttonStyle="solid"
         />
         <Table columns={columns} dataSource={list} rowKey="_id" />
+        <Modal
+            visible={isModalVisible}
+            onCancel={handleCancel}
+            footer={null}
+            width="80%"
+        >
+          <iframe
+              src={fileUrl}
+              style={{ width: '100%', height: '500px', border: 'none' }}
+              title="文件预览"
+          ></iframe>
+        </Modal>
       </div>
   );
 };
-
+/* eslint-disable */
 export default Home;
