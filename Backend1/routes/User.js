@@ -145,3 +145,30 @@ router.post('/forgot', (req, res) => {
     }
   })
 })
+
+router.post('/sendCode', (req, res) => {
+  let { account } = req.body
+  User.findOne({ account }, (err, doc) => {
+    if (doc == null) res.send({ Code: 500, Msg: 'User name does not exist' })
+
+    for (var i = 0; i < 6; i++) {
+      code += Math.floor(Math.random() * 10)
+    }
+    let options = {
+      from: 'icesylh@gmail.com',
+      to: account,
+      subject: 'Activation code',
+      text: 'Your verification code:' + code,
+      html: `
+            <h1>Hi, your email has been sent!</h1>,<a href="http://localhost:3000/forgot?id=${account}&code=${code}">点击修改密码</a>`
+    }
+
+    transPort.sendMail(options, (err, info) => {
+      if (err) {
+        res.send({ Code: 500, Msg: err })
+      } else {
+        res.send({ Code: 200, Msg: 'Sent successfully' })
+      }
+    })
+  })
+})

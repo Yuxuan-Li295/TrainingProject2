@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Button, Form, FormProps, Input, message } from 'antd'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
-import { useNavigate } from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import axios from 'axios'
 
 import { useAppDispatch } from '../hooks/store'
@@ -74,26 +74,30 @@ const Login = () => {
                 label="Username"
                 name="username"
                 rules={[
-                  { required: true, message: 'Please input your username!' }
+                  {required: true, message: 'Please input your username!'}
                 ]}
             >
-              <Input placeholder="input username" />
+              <Input placeholder="input username"/>
             </Form.Item>
             <Form.Item
                 label="Password"
                 name="password"
-                rules={[{ required: true, message: 'Please input your password!' }]}
+                rules={[{required: true, message: 'Please input your password!'}]}
             >
-              <Input type="password" placeholder="input Password" />
+              <Input type="password" placeholder="input Password"/>
             </Form.Item>
             <Form.Item>
               <Button type="primary" block htmlType="submit">
                 Sign in
               </Button>
             </Form.Item>
+            <div className="link">
+
+              <Link to="/forgetpassword">Forgot password</Link>
+            </div>
           </Form>
         </div>
-        <Footer />
+        <Footer/>
       </div>
   )
 }

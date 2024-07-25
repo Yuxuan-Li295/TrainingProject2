@@ -17,7 +17,7 @@ const PersonalInfo = lazy(() => import('../pages/PersonalInfo'));
 const Onboard = lazy(() => import('../pages/onboard'));
 const UserVisaStatus = lazy(() => import('../pages/UserVisaStatus'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
-
+const ForgetPassword = lazy(() => import('../pages/forgetPassword'));
 const lazyLoad = (children) => {
   return <Suspense fallback={<h1>Loading...</h1>}>{children}</Suspense>;
 }
@@ -120,6 +120,13 @@ export const routers = [
       title: 'onboard'
     },
     element: lazyLoad(<Onboard />)
+  },
+  {
+    path: '/forgetpassword',
+    meta: {
+      title: 'forgetpassword'
+    },
+    element: lazyLoad(<ForgetPassword />)
   },
   {
     path: '*',

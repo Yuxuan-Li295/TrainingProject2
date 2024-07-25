@@ -15,7 +15,7 @@ const Send = () => {
               style={{ fontSize: 40, marginBottom: 20, color: '#2754db' }}
             />
             <p className="content">
-              We have sent the update password link to youremial, please check
+              We have sent the update password link to your email, please check
               that !
             </p>
           </div>
