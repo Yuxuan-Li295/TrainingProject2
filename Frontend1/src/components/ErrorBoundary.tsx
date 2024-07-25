@@ -1,53 +1,70 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { ReactNode, ErrorInfo } from 'react';
 import { Result, Button } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
+  navigate?: NavigateFunction;
 }
 
-const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({ children }) => {
-  const [hasError, setHasError] = useState(false);
-  const [error, setError] = useState<any>(null);
-  const [errorInfo, setErrorInfo] = useState<any>(null);
-  const navigate = useNavigate();
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: any;
+  errorInfo: any;
+}
 
-  const resetError = () => {
-    setHasError(false);
-    setError(null);
-    setErrorInfo(null);
-    navigate('/');
-  };
-
-  const ErrorFallback = ({ error, resetError }: { error: any, resetError: () => void }) => {
-    return (
-      <Result
-        status="500"
-        title="500"
-        subTitle="Sorry, something went wrong."
-        extra={<Button type="primary" onClick={resetError}>Back Home</Button>}
-      />
-    );
-  };
-
-  useEffect(() => {
-    const originalErrorHandler = console.error;
-    console.error = (...args) => {
-      setHasError(true);
-      setError(args[0]);
-      setErrorInfo(args[1]);
-      originalErrorHandler(...args);
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null
     };
-    return () => {
-      console.error = originalErrorHandler;
-    };
-  }, []);
-
-  if (hasError) {
-    return <ErrorFallback error={error} resetError={resetError} />;
   }
 
-  return <>{children}</>;
-};
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error: error };
+  }
 
-export default ErrorBoundary;
+  componentDidCatch(error: any, errorInfo: ErrorInfo) {
+    this.setState({
+      error: error,
+      errorInfo: errorInfo
+    });
+  }
+
+  resetError = () => {
+    this.setState({
+      hasError: false,
+      error: null,
+      errorInfo: null
+    });
+    this.props.navigate && this.props.navigate('/');
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+          <Result
+              status="500"
+              title="500"
+              subTitle="Sorry, something went wrong."
+              extra={<Button type="primary" onClick={this.resetError}>Back Home</Button>}
+          />
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+export function withNavigation(Component: React.ComponentType<any>) {
+  return function WrappedComponent(props: any) {
+    const navigate = useNavigate();
+    return <Component {...props} navigate={navigate} />;
+  };
+}
+
+const ErrorBoundaryWrapper = withNavigation(ErrorBoundary);
+export default ErrorBoundaryWrapper;
