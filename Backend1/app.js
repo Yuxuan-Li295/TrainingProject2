@@ -9,7 +9,7 @@ const cors = require('cors');
 require('./data/db')
 
 const app = express()
-// 使用 cors 中间件
+// Using cors middleware
 app.use(cors({
   origin: 'http://localhost:3000', 
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -23,12 +23,12 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
-app.use('/api', express.static(path.join(__dirname, 'doc'))) // TODO 上线时关闭 apidoc -i routes/ -o doc/
+app.use('/api', express.static(path.join(__dirname, 'doc'))) 
 
 const routes = fs.readdirSync(path.join(__dirname, 'routes'))
 routes.forEach((v) => {
   let rout = v.replace('.js', '')
-  app.use(`/${rout}`, require(`./routes/${rout}`)) //以文件名为接口
+  app.use(`/${rout}`, require(`./routes/${rout}`)) //Use the filename as the interface
 })
 
 // catch 404 and forward to error handler

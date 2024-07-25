@@ -1,7 +1,7 @@
 const { exec } = require("child_process");
-//传入url
+//Pass in the url
 module.exports = function (url) {
-  // 拿到当前系统的参数
+  //Get the current system parameters
   console.log(url);
   switch (process.platform) {
     case "darwin": //mac
@@ -17,7 +17,7 @@ module.exports = function (url) {
       break;
 
     default:
-      // 默认mac
+      // Default mac
       exec(`open ${url}/admin`);
   }
 };

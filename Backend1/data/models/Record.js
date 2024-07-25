@@ -1,27 +1,27 @@
 const mongoose = require('mongoose')
 
 const visaStepStatusEnum = {
-  NOT_SUBMITTED: 'not_submitted', // 尚未提交
-  SUBMITTED: 'submitted', // 已提交
-  APPROVED: 'approved', // 已批准
-  REJECTED: 'rejected' // 已拒绝
+  NOT_SUBMITTED: 'not_submitted', // Not yet submitted
+  SUBMITTED: 'submitted', // Alread submitted
+  APPROVED: 'approved', // Already approved
+  REJECTED: 'rejected' // Already rejected
 }
 
 const statusEnum = {
-  NOT_SUBMITTED: 'not_submitted', // 尚未提交
-  SUBMITTED: 'submitted', // 已提交
-  APPROVED: 'approved', // 已批准
-  REJECTED: 'rejected', // 已拒绝
-  COMPLETE: 'complete' // 完成所有步骤
+  NOT_SUBMITTED: 'not_submitted', // Not yet submitted
+  SUBMITTED: 'submitted', // Submitted
+  APPROVED: 'approved', // Approved
+  REJECTED: 'rejected', // Rejected
+  COMPLETE: 'complete' // Complete all the steps
 }
 
 const currentVisaStepEnum = {
   NOT_STARTED: 'not_started',
-  RECEIPT: 'receipt', // OPT收据阶段
-  EAD_CARD: 'ead_card', // EAD卡阶段
-  I983: 'i983', // I-983表格阶段
-  I20: 'i20', // I-20表格阶段
-  COMPLETE: 'complete' // 完成所有步骤
+  RECEIPT: 'receipt', // OPT Receipt stage
+  EAD_CARD: 'ead_card', // EAD Card Stage
+  I983: 'i983', // I-983 Table Stage
+  I20: 'i20', // I-20 Table Stage
+  COMPLETE: 'complete' // Completed all the steps
 }
 
 const documentsSchema = new mongoose.Schema({
@@ -64,7 +64,7 @@ const documentsSchema = new mongoose.Schema({
 
 const schema = new mongoose.Schema(
   {
-    id: { type: String, unique: true }, //unique 唯一键
+    id: { type: String, unique: true }, //unique key
     starttime: String,
     endtime: String,
     day: String,
