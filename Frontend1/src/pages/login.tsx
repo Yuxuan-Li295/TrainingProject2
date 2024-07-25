@@ -5,8 +5,8 @@ import Header from '../components/Header'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-import { useAppDispatch, useAppSelector } from '../hooks/store'
-import { login, setToken } from '../store/counterSlice'
+import { useAppDispatch } from '../hooks/store'
+import { login, setToken, setUserType} from '../store/counterSlice'
 
 interface IForm {
   username: string
@@ -45,7 +45,9 @@ const Login = () => {
             const token = Token;
             dispatch(login({ username, token }))
             localStorage.setItem('token', token)
-            message.success('登录成功')
+            const userType = account === 'hr' ? 'HR' : 'Employee';
+            dispatch(setUserType(userType))
+            message.success('Login Successfully')
             if (account === 'hr') {
               setTimeout(() => {
                 history(`/user/list`)
@@ -56,11 +58,11 @@ const Login = () => {
               }, 1000)
             }
           } else {
-            message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误')
+            message.error(typeof data.Msg === 'string' ? data.Msg : 'Error on the server side')
           }
         })
         .catch(() => {
-          message.error('服务器错误')
+          message.error('Error on the server side')
         })
   }
 

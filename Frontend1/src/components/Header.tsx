@@ -5,20 +5,20 @@ import { useNavigate } from 'react-router-dom'
 import { RootState, useAppDispatch, useAppSelector } from '../hooks/store'
 import { loginout } from '../store/counterSlice'
 
-const Footer = () => {
+const Header = () => {
   const { Search } = Input
   const history = useNavigate()
   const dispatch = useAppDispatch()
-  const { isLogin, token } = useAppSelector((state: RootState) => state.counter)
+  const { isLogin, userType } = useAppSelector((state: RootState) => state.counter)
 
   return (
     <div className="header">
       <div className="header-box">
         <div className="left">
           <div className="logo">
-            <div className="first pc">HR 系统</div>
-            <div className="first mobile">HR</div>
-            <span>HR</span>
+            <div className="first pc">{userType === 'HR' ? 'HR System' : 'Employee Portal'}</div>
+            <div className="first mobile">{userType === 'HR' ? 'HR System' : 'Employee Portal'}</div>
+            <span>{userType === 'HR' ? 'HR' : 'Employee'}</span>
           </div>
           {/* <Search placeholder=" search" allowClear className="pc" /> */}
         </div>
@@ -45,4 +45,4 @@ const Footer = () => {
     </div>
   )
 }
-export default Footer
+export default Header
