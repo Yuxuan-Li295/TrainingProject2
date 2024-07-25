@@ -9,7 +9,7 @@ import moment from 'moment'
 import WorkAuthorizationForm from '../components/WorkAuthorizationForm'
 import FileManagement from '../components/FileManagement'
 import Footer from '../components/Footer'
-import Header from '../components/Header'
+
 interface IForm extends Partial<UserDataType> { }
 
 const { Option } = Select
@@ -181,126 +181,122 @@ const PersonalInfo = () => {
     }
 
     return (
-        <div className="page-container">
-            <Header />
-            <Card
-                title="Personal Information"
-                bordered={false}
-                style={{ maxWidth: 800, margin: '0 auto', marginTop: 20 }}
+        <Card
+            title="Personal Information"
+            bordered={false}
+            style={{ maxWidth: 800, margin: '0 auto', marginTop: 20 }}
+        >
+            <Form
+                layout="vertical"
+                form={form}
+                className="personal-info-form"
+                onFinish={onFinish}
             >
-                <Form
-                    layout="vertical"
-                    form={form}
-                    className="personal-info-form"
-                    onFinish={onFinish}
-                >
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <Form.Item label="Profile Picture">
-                                <Upload
-                                    listType="picture-card"
-                                    fileList={fileList}
-                                    onChange={handleUploadChange}
-                                    beforeUpload={() => false}
-                                >
-                                    {fileList.length === 0 && <UploadOutlined />}
-                                </Upload>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="First Name" name="firstName" rules={[{ required: true, message: 'Please input your first name!' }]}>
-                                <Input placeholder="Input first name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Last Name" name="lastName" rules={[{ required: true, message: 'Please input your last name!' }]}>
-                                <Input placeholder="Input last name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Preferred Name" name="preferredName" rules={[{ required: true, message: 'Please input your preferred name!' }]}>
-                                <Input placeholder="Input preferred name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
-                                <Input placeholder="Input email" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Date of Birth" name="dob" rules={[{ required: true, message: 'Please input your date of birth!' }]}>
-                                <DatePicker style={{ width: '100%' }} />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Gender" name="gender" rules={[{ required: true, message: 'Please select your gender!' }]}>
-                                <Select placeholder="Select gender">
-                                    <Option value="male">Male</Option>
-                                    <Option value="female">Female</Option>
-                                    <Option value="i do not wish to answer">I do not wish to answer</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="SSN" name="ssn" rules={[{ required: true, message: 'Please input your SSN!' }]}>
-                                <Input placeholder="Input SSN" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Building" name="address.building">
-                                <Input placeholder="Input building" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Street" name="address.street" rules={[{ required: true, message: 'Please input your street!' }]}>
-                                <Input placeholder="Input street" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="City" name="address.city" rules={[{ required: true, message: 'Please input your city!' }]}>
-                                <Input placeholder="Input city" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="State" name="address.state" rules={[{ required: true, message: 'Please input your state!' }]}>
-                                <Input placeholder="Input state" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Zip Code" name="address.zip" rules={[{ required: true, message: 'Please input your zip code!' }]}>
-                                <Input placeholder="Input zip code" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Cell Phone" name="contactInfo.cellPhone" rules={[{ required: true, message: 'Please input your cell phone!' }]}>
-                                <Input placeholder="Input cell phone" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Work Phone" name="contactInfo.workPhone">
-                                <Input placeholder="Input work phone" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                            <WorkAuthorizationForm form={form} workAuthTitle={userInfo?.workAuthorization?.title} />
-                        </Col>
-                        <Col span={24}>
-                            <Form.Item label="Upload Driver’s license and Work authorization">
-                                <FileManagement />
-                            </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                            <Form.Item>
-                                <Button type="primary" block htmlType="submit">
-                                    Update Info
-                                </Button>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                </Form>
-            </Card>
-            <Footer />
-        </div>
+                <Row gutter={16}>
+                    <Col span={24}>
+                        <Form.Item label="Profile Picture">
+                            <Upload
+                                listType="picture-card"
+                                fileList={fileList}
+                                onChange={handleUploadChange}
+                                beforeUpload={() => false}
+                            >
+                                {fileList.length === 0 && <UploadOutlined />}
+                            </Upload>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="First Name" name="firstName" rules={[{ required: true, message: 'Please input your first name!' }]}>
+                            <Input placeholder="Input first name" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Last Name" name="lastName" rules={[{ required: true, message: 'Please input your last name!' }]}>
+                            <Input placeholder="Input last name" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Preferred Name" name="preferredName" rules={[{ required: true, message: 'Please input your preferred name!' }]}>
+                            <Input placeholder="Input preferred name" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
+                            <Input placeholder="Input email" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Date of Birth" name="dob" rules={[{ required: true, message: 'Please input your date of birth!' }]}>
+                            <DatePicker style={{ width: '100%' }} />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Gender" name="gender" rules={[{ required: true, message: 'Please select your gender!' }]}>
+                            <Select placeholder="Select gender">
+                                <Option value="male">Male</Option>
+                                <Option value="female">Female</Option>
+                                <Option value="i do not wish to answer">I do not wish to answer</Option>
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="SSN" name="ssn" rules={[{ required: true, message: 'Please input your SSN!' }]}>
+                            <Input placeholder="Input SSN" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Building" name="address.building">
+                            <Input placeholder="Input building" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Street" name="address.street" rules={[{ required: true, message: 'Please input your street!' }]}>
+                            <Input placeholder="Input street" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="City" name="address.city" rules={[{ required: true, message: 'Please input your city!' }]}>
+                            <Input placeholder="Input city" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="State" name="address.state" rules={[{ required: true, message: 'Please input your state!' }]}>
+                            <Input placeholder="Input state" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Zip Code" name="address.zip" rules={[{ required: true, message: 'Please input your zip code!' }]}>
+                            <Input placeholder="Input zip code" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Cell Phone" name="contactInfo.cellPhone" rules={[{ required: true, message: 'Please input your cell phone!' }]}>
+                            <Input placeholder="Input cell phone" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Work Phone" name="contactInfo.workPhone">
+                            <Input placeholder="Input work phone" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={24}>
+                        <WorkAuthorizationForm form={form} workAuthTitle={userInfo?.workAuthorization?.title} />
+                    </Col>
+                    <Col span={24}>
+                        <Form.Item label="Upload Driver’s license and Work authorization">
+                            <FileManagement />
+                        </Form.Item>
+                    </Col>
+                    <Col span={24}>
+                        <Form.Item>
+                            <Button type="primary" block htmlType="submit">
+                                Update Info
+                            </Button>
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form>
+        </Card>
     )
 }
 

@@ -16,12 +16,6 @@ const currentVisaStepText = {
     complete: 'All Steps Completed'
 };
 
-const documentsFieldMap = {
-    receipt: 'RECEIPT',
-    ead_card: 'EAD_CARD',
-    i983: 'I983_FORM',
-    i20: 'I20_FORM'
-};
 
 const UserVisaStatus = () => {
     const { username, token } = useAppSelector(state => state.counter);
@@ -264,7 +258,6 @@ const UserVisaStatus = () => {
     if (!workAuthorization || workAuthorization.title !== 'OPT') {
         return (
             <div className="page-container">
-                <Header />
                 <Card
                     title="Work Authorization"
                     bordered={false}
@@ -272,14 +265,12 @@ const UserVisaStatus = () => {
                 >
                     <p>Work Authorization Type: {workAuthorization?.title}</p>
                 </Card>
-                <Footer />
             </div>
         );
     }
 
     return (
-        <div className="page-container">
-            <Header />
+        <div className="page-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '120vh' }}>
             <Card
                 title="Visa Status"
                 bordered={false}
@@ -317,7 +308,6 @@ const UserVisaStatus = () => {
                     </Col>
                 </Row>
             </Card>
-            <Footer />
             <Modal
                 visible={isModalVisible}
                 onCancel={handleCancel}
