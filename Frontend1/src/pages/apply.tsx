@@ -23,12 +23,12 @@ import { DataType, IResult, currentVisaStepEnum, IQuery, visaStepStatusEnum, Vis
 import { DownloadOutlined, EyeOutlined } from '@ant-design/icons';
 
 const currentVisaStepText = {
-    not_started: '入职申请阶段',
-    receipt: 'OPT收据阶段',
-    ead_card: 'EAD卡阶段',
-    i983: 'I-983表格阶段',
-    i20: 'I-20表格阶段',
-    complete: '完成所有步骤'
+    not_started: 'Onbording Application Phase',
+    receipt: 'OPT Receipt Phase',
+    ead_card: 'EAD Card Phase',
+    i983: 'I-983 Table Phase',
+    i20: 'I-20 Phase',
+    complete: 'Completed All Steps'
 };
 const currentVisaStepMap = {
     receipt: 'receiptStatus',
@@ -39,19 +39,19 @@ const currentVisaStepMap = {
 
 const options = [
     {
-        label: '全部',
+        label: 'All',
         value: ''
     },
     {
-        label: '待审查',
+        label: 'Pending',
         value: 'submitted'
     },
     {
-        label: '已批准',
+        label: 'Approved',
         value: 'approved'
     },
     {
-        label: '已拒绝',
+        label: 'Rejected',
         value: 'rejected'
     }
 ];
@@ -104,13 +104,13 @@ const Home = () => {
 
     const columns: TableProps<DataType>['columns'] = [
         {
-            title: '姓名',
+            title: 'Name',
             dataIndex: 'name',
             key: 'name',
             render: (_, record) => `${record?.user?.preferredName}`
         },
         {
-            title: '电子邮件',
+            title: 'Email',
             dataIndex: 'email',
             key: 'email',
             render: (_, record) => record?.user?.email
@@ -263,45 +263,8 @@ const Home = () => {
                 />
             )
         },
-        // {
-        //     title: 'OTHERS',
-        //     dataIndex: 'OTHERS',
-        //     key: 'OTHERS',
-        //     render: (_, record) => (
-        //         <List
-        //             //@ts-ignore
-        //             dataSource={record?.documents?.OTHERS}
-        //             renderItem={item => (
-        //                 <List.Item>
-        //                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        //                         {
-        //                             // @ts-ignore
-        //                             item.name
-        //                         }
-        //                         <Button
-        //                             icon={<DownloadOutlined />}
-        //                             onClick={() => handleDownload(
-        //                                 // @ts-ignore
-        //                                 item.id, item.name
-        //                             )}
-        //                             style={{ marginTop: 8 }}
-        //                         />
-        //                         <Button
-        //                             icon={<EyeOutlined />}
-        //                             onClick={() => handlePreview(
-        //                                 // @ts-ignore
-        //                                 item.id, item.name
-        //                             )}
-        //                             style={{ marginTop: 8 }}
-        //                         />
-        //                     </div>
-        //                 </List.Item>
-        //             )}
-        //         />
-        //     )
-        // },
         {
-            title: '当前阶段',
+            title: 'Current Stage',
             dataIndex: 'step',
             key: 'step',
             width: 120,
@@ -312,26 +275,35 @@ const Home = () => {
             }
         },
         {
-            title: '状态',
+            title: 'Status',
             dataIndex: 'status',
             key: 'status',
             width: 120,
             render: (_, record) => {
+                const currentstep = record?.onboardingStatus['currentStep']
+
                 const key = currentVisaStepMap[record.onboardingStatus.currentStep as VisaStepEnum] as keyof IOnboardingStatus;
+                console.log(key)
+                if(currentstep === 'not_started'){
+                    return <Tag color="magenta"> Unstarted </Tag>
+                }
                 return <Tag color="magenta">
-                    {!key || record?.onboardingStatus['currentStep'] === 'complete' ? '已完成' :
-                        record?.onboardingStatus[key] === visaStepStatusEnum.NOT_SUBMITTED ? '未提交' :
-                            record?.onboardingStatus[key] === visaStepStatusEnum.SUBMITTED ? '已提交' :
-                                record?.onboardingStatus[key] === visaStepStatusEnum.APPROVED ? '已批准' :
-                                    record?.onboardingStatus[key] === visaStepStatusEnum.REJECTED ? '已拒绝' : ''}
+                    {
+                        !key || currentstep === 'complete' ? 'Completed' :
+                            currentstep === 'not_started' ? 'Unstarted' :
+                                record?.onboardingStatus[key] === visaStepStatusEnum.NOT_SUBMITTED ? 'Unsubmitted' :
+                                    record?.onboardingStatus[key] === visaStepStatusEnum.SUBMITTED ? 'Submitted' :
+                                        record?.onboardingStatus[key] === visaStepStatusEnum.APPROVED ? 'Approved' :
+                                            record?.onboardingStatus[key] === visaStepStatusEnum.REJECTED ? 'Rejected' : ''
+                    }
                 </Tag>
             }
         },
         {
-            title: '操作',
+            title: 'Operation',
             key: 'action',
             width: 240,
-            render: (text, record) => {
+            render: (_, record) => {
                 const { currentStep, receiptStatus, eadCardStatus, i983Status, i20Status } = record?.onboardingStatus ?? {};
                 const show =
                     (currentStep === currentVisaStepEnum.RECEIPT && receiptStatus === visaStepStatusEnum.SUBMITTED) ||
@@ -346,10 +318,10 @@ const Home = () => {
                             onClick={() => {
                                 const step = record?.onboardingStatus?.currentStep;
                                 const key = currentVisaStepMap[record.onboardingStatus.currentStep as VisaStepEnum] as keyof IOnboardingStatus;
-                                const status = record?.onboardingStatus[key] === visaStepStatusEnum.NOT_SUBMITTED ? '未提交' :
-                                    record?.onboardingStatus[key] === visaStepStatusEnum.SUBMITTED ? '已提交' :
-                                        record?.onboardingStatus[key] === visaStepStatusEnum.APPROVED ? '已批准' :
-                                            record?.onboardingStatus[key] === visaStepStatusEnum.REJECTED ? '已拒绝' : '';
+                                const status = record?.onboardingStatus[key] === visaStepStatusEnum.NOT_SUBMITTED ? 'Unsubmit' :
+                                    record?.onboardingStatus[key] === visaStepStatusEnum.SUBMITTED ? 'Submitted' :
+                                        record?.onboardingStatus[key] === visaStepStatusEnum.APPROVED ? 'Approved' :
+                                            record?.onboardingStatus[key] === visaStepStatusEnum.REJECTED ? 'Rejected' : '';
                                 if (step === currentVisaStepEnum.NOT_STARTED) {
                                     setStepCurrent(0);
                                 } else if (step === currentVisaStepEnum.RECEIPT) {
@@ -368,14 +340,14 @@ const Home = () => {
                                 setIsStepOpen(true);
                             }}
                         >
-                            查看申请
+                            View Application
                         </Button>
                         {show ? (
                             <>
                                 <Popconfirm
-                                    title="提示"
-                                    description="确定要通过审批吗?"
-                                    okText="确定"
+                                    title="Reminder"
+                                    description="Are you sure to approve?"
+                                    okText="Yes"
                                     onConfirm={() => {
                                         axios
                                             .post('http://localhost:8088/Record/agree', {
@@ -385,15 +357,15 @@ const Home = () => {
                                                 if (data.Code === 200) {
                                                     setLoad(true);
                                                 } else {
-                                                    message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误');
+                                                    message.error(typeof data.Msg === 'string' ? data.Msg : 'Unknown server error');
                                                 }
                                             }).catch(() => {
                                             //
                                         });
                                     }}
-                                    cancelText="取消"
+                                    cancelText="Cancel"
                                 >
-                                    <Button type="link">同意</Button>
+                                    <Button type="link">Approve</Button>
                                 </Popconfirm>
 
                                 <Button
@@ -404,7 +376,7 @@ const Home = () => {
                                         setIsRefuseOpen(true);
                                     }}
                                 >
-                                    拒绝
+                                    Reject
                                 </Button>
                             </>
                         ) : null}
@@ -426,7 +398,7 @@ const Home = () => {
                     setList(data.data.list);
                     setLoad(false);
                 } else {
-                    message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误');
+                    message.error(typeof data.Msg === 'string' ? data.Msg : 'Unknown server error');
                 }
             }).catch(() => {
             //
@@ -469,7 +441,7 @@ const Home = () => {
                 if (data.Code === 200) {
                     handleCancel();
                 } else {
-                    message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误');
+                    message.error(typeof data.Msg === 'string' ? data.Msg : 'Unknown server error');
                 }
             }).catch(() => {
             //
@@ -486,7 +458,7 @@ const Home = () => {
                     handleRefuseCancel();
                     setLoad(true);
                 } else {
-                    message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误');
+                    message.error(typeof data.Msg === 'string' ? data.Msg : 'Unknown server error');
                 }
             }).catch(() => {
             //
@@ -518,7 +490,7 @@ const Home = () => {
                 <Col span={6}>
                     <Button type="primary" onClick={() => {
                         setLoad(true);
-                    }}>查询</Button>
+                    }}>Search</Button>
                     <Button
                         type="primary"
                         style={{ margin: '0 10px' }}
@@ -526,7 +498,7 @@ const Home = () => {
                             setIsModalOpen(true);
                         }}
                     >
-                        生成注册令牌
+                        Generate register token
                     </Button>
                 </Col>
             </Row>
@@ -540,11 +512,11 @@ const Home = () => {
             />
             <Table columns={columns} dataSource={list} rowKey="_id" />
             <Modal
-                title="生成注册令牌"
+                title="Generate registration token"
                 open={isModalOpen}
                 onOk={handleOk}
-                cancelText="取消"
-                okText="确定"
+                cancelText="Cancel"
+                okText="OK"
                 onCancel={handleCancel}
             >
                 <Form form={form} style={{ margin: '20px 0' }} onFinish={onFinish}>
@@ -554,7 +526,7 @@ const Home = () => {
                         rules={[
                             {
                                 type: 'email',
-                                message: '请输入合法的邮箱地址！'
+                                message: 'Please enter a valid mail address！'
                             },
                             { required: true, message: 'Please input your email!' }
                         ]}
@@ -592,10 +564,10 @@ const Home = () => {
                 </Form>
             </Modal>
             <Modal
-                title="拒绝原因"
+                title="Reject Reason"
                 open={isRefuseOpen}
-                cancelText="取消"
-                okText="确定"
+                cancelText="Cancel"
+                okText="OK"
                 onOk={handleRefuseOk}
                 onCancel={handleRefuseCancel}
             >
@@ -605,12 +577,12 @@ const Home = () => {
                     onFinish={onRefuseFinish}
                 >
                     <Form.Item
-                        label="拒绝原因"
+                        label="Reject Reason"
                         name="refuse"
                         rules={[{ required: true, message: 'Please input your Refuse!' }]}
                     >
                         <TextArea
-                            placeholder="拒绝原因"
+                            placeholder="Reject Reason"
                             autoSize={{
                                 minRows: 3,
                                 maxRows: 5
@@ -621,10 +593,10 @@ const Home = () => {
             </Modal>
 
             <Modal
-                title="流程状态"
+                title="Process Status"
                 open={isStepOpen}
-                cancelText="取消"
-                okText="确定"
+                cancelText="Cancel"
+                okText="OK"
                 onOk={handleStepCancel}
                 onCancel={handleStepCancel}
             >
@@ -666,7 +638,7 @@ const Home = () => {
                 <iframe
                     src={fileUrl}
                     style={{ width: '100%', height: '500px', border: 'none' }}
-                    title="文件预览"
+                    title="File Preview"
                 ></iframe>
             </Modal>
         </div>

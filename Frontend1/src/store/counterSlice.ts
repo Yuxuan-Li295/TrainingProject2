@@ -4,12 +4,14 @@ interface CounterState {
   isLogin: boolean
   username: string | null
   token: string | null
+  userType: string | null
 }
 
 const initialState: CounterState = {
   isLogin: false,
   username: null,
   token: null,
+  userType: '',
 }
 
 const counterSlice = createSlice({
@@ -26,15 +28,19 @@ const counterSlice = createSlice({
       state.isLogin = false
       state.username = null
       state.token = null
+      state.userType = ''
       localStorage.removeItem('token')
     },
     setToken(state, action: PayloadAction<string>) {
       state.isLogin = true
       state.token = action.payload
+    },
+    setUserType: (state, action) => {
+      state.userType = action.payload
     }
   },
 })
 
-export const { login, loginout, setToken } = counterSlice.actions
+export const { login, loginout, setToken, setUserType } = counterSlice.actions
 
 export default counterSlice.reducer

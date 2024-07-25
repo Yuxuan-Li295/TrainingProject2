@@ -16,30 +16,30 @@ const transPort = nodemailder.createTransport({
     pass: 'cipdczqlytnhglzl',
     user: 'icesylh@gmail.com'
   },
-  secure: false // 加密发送
+  secure: false // encrypted send
 })
 
 router.post('/sendEmail', (req, res) => {
   let { userId, step } = req.body
-  User.findOne({ _id: userId }, (err, doc) => {
+  User.findOne({ _id: userId }, (_, doc) => {
     if (doc) {
       let options = {
         from: 'icesylh@gmail.com',
         to: doc.email,
-        subject: '提交申请温馨提示', //邮件主题
+        subject: 'Hello, warm reminding for submitting applications', //Email theme
         html: `
-              <h1>您好，请${step}！`
+              <h1>Hello，please${step}！`
       }
 
-      transPort.sendMail(options, (err, info) => {
+      transPort.sendMail(options, (err) => {
         if (err) {
           res.send({ Code: 500, Msg: err })
         } else {
-          res.send({ Code: 200, Msg: '发送成功' })
+          res.send({ Code: 200, Msg: 'Send successfully' })
         }
       })
     } else {
-      res.send({ Code: 500, Msg: '未找到该用户' })
+      res.send({ Code: 500, Msg: 'User not found' })
     }
   })
 })
@@ -56,20 +56,20 @@ router.post('/login', (req, res) => {
 
         res.send({
           Code: 200,
-          Msg: '登录成功',
+          Msg: 'Login Successfully',
           Token,
           data: { name: doc.name, type: doc.type }
         })
-      } else res.send({ Code: 500, Msg: '密码错误' })
-    } else res.send({ Code: 500, Msg: '账号不存在' })
+      } else res.send({ Code: 500, Msg: 'Password Incorrect' })
+    } else res.send({ Code: 500, Msg: 'Account does not exists' })
   })
 })
 var code = ''
 router.post('/register', (req, res) => {
   let { account, firstName, lastName, preferredName } = req.body
-  User.findOne({ account }, (err, doc) => {
+  User.findOne({ account }, (_, doc) => {
     if (doc) {
-      res.send({ Code: 500, Msg: '用户名已存在' })
+      res.send({ Code: 500, Msg: 'Username already exists' })
     } else {
 
       for (var i = 0; i < 6; i++) {
@@ -78,10 +78,10 @@ router.post('/register', (req, res) => {
       let options = {
         from: 'icesylh@gmail.com',
         to: account,
-        subject: '激活验证码', //邮件主题
-        text: '你的验证码:' + code, // 邮件正文
+        subject: 'Activation code', //Email subject
+        text: 'Your verification code' + code, // Email main contents
         html: `
-              <h1>您好，请注册员工帐号！</h1>,<a href="http://localhost:3000/register?id=${account}&code=${code}">点击完成注册</a>`
+              <h1>Hello! Please register for an employee account</h1>,<a href="http://localhost:3000/register?id=${account}&code=${code}">Click to complete registration</a>`
       }
 
       User.create(
@@ -106,7 +106,6 @@ router.post('/register', (req, res) => {
                 starttime: `${starttime}`,
                 endtime: `${starttime + 2 * 24 * 3600000}`,
                 day: '2',
-                status: '1',
                 id: new Date().getTime()
               },
               (err, doc) => {
@@ -114,11 +113,11 @@ router.post('/register', (req, res) => {
                   res.send({ Code: 500, Msg: err })
                 }
 
-                transPort.sendMail(options, (err, info) => {
+                transPort.sendMail(options, (err) => {
                   if (err) {
                     res.send({ Code: 500, Msg: err })
                   } else {
-                    res.send({ Code: 200, Msg: '注册成功' })
+                    res.send({ Code: 200, Msg: 'Register successfully' })
                   }
                 })
               }
@@ -131,18 +130,18 @@ router.post('/register', (req, res) => {
 })
 router.post('/forgot', (req, res) => {
   let { account, password } = req.body
-  User.findOne({ account }, (err, doc) => {
-    if (doc == null) res.send({ Code: 500, Msg: '用户名不存在' })
+  User.findOne({ account }, (_, doc) => {
+    if (doc == null) res.send({ Code: 500, Msg: 'Username does not exist' })
     if (req.body.code === code) {
       User.updateOne(
         { account: account },
         { $set: { password: bcrypt.hashSync(password, 5) } },
         function (err) {
-          res.send({ Code: 200, Msg: '修改成功' })
+          res.send({ Code: 200, Msg: 'Modify successfully' })
         }
       )
     } else {
-      res.send({ Code: 500, Msg: '您还未发送邮箱验证' })
+      res.send({ Code: 500, Msg: 'You have not yet sent the email verification' })
     }
   })
 })

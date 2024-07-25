@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const schema = new mongoose.Schema(
   {
     name: String,
-    account: { type: String, unique: true }, //unique 唯一键
+    account: { type: String, unique: true }, //unique Key
     password: String,
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },

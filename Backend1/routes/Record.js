@@ -66,7 +66,7 @@ router.post('/list', (req, res) => {
 
       res.send({
         Code: 200,
-        Msg: '请求成功',
+        Msg: 'Request Successful',
         data: { list: list }
       })
     })
@@ -75,40 +75,40 @@ router.post('/info', async (req, res) => {
   const { id, username } = req.body;
 
   try {
-    // 如果提供了id，则查找特定的记录并填充user字段
+    // If provided id, then search for the certain record and fill the user field
     if (id) {
       const record = await Record.findOne({ _id: id })
           .populate('user')
           .exec();
 
       if (!record) {
-        return res.status(404).send({ Code: 404, Msg: '记录未找到' });
+        return res.status(404).send({ Code: 404, Msg: 'Record not found' });
       }
 
       return res.send({
         Code: 200,
-        Msg: '请求成功',
+        Msg: 'Request successfully',
         data: record
       });
     }
     if (username) {
       const user = await User.findOne({ account: username }).exec();
       if (!user) {
-        return res.status(404).send({ Code: 404, Msg: '用户未找到' });
+        return res.status(404).send({ Code: 404, Msg: 'User not found' });
       }
 
       const records = await Record.find({ user: user._id }).exec();
 
       return res.send({
         Code: 200,
-        Msg: '请求成功',
+        Msg: 'Request success',
         data: records
       });
     }
-    res.status(400).send({ Code: 400, Msg: '缺少参数：id 或 username' });
+    res.status(400).send({ Code: 400, Msg: 'Lack parameters：id or username' });
   } catch (err) {
     console.error(err);
-    res.status(500).send({ Code: 500, Msg: '服务器内部错误', error: err.message });
+    res.status(500).send({ Code: 500, Msg: 'Internal error in the server', error: err.message });
   }
 });
 
@@ -124,7 +124,7 @@ router.post('/agree', (req, res) => {
 
       res.send({
         Code: 500,
-        Msg: '不可操作'
+        Msg: 'Inoperative'
       })
     } else {
       console.log(currentStep)
@@ -147,14 +147,14 @@ router.post('/agree', (req, res) => {
             }
           },
           function (err) {
-            res.send({ Code: 200, Msg: '操作成功' })
+            res.send({ Code: 200, Msg: 'Operate successfully' })
           }
         )
       } else {
 
         res.send({
           Code: 500,
-          Msg: '不可操作'
+          Msg: 'Inoperative'
         })
       }
     }
@@ -172,7 +172,7 @@ router.post('/refuse', (req, res) => {
     if (currentStep === 'not_started' || currentStep === 'complete') {
       res.send({
         Code: 500,
-        Msg: '不可操作'
+        Msg: 'Inoperative'
       })
     } else {
       if (doc.onboardingStatus[`${stepsMap[currentStep]}`] === 'submitted') {
@@ -189,13 +189,13 @@ router.post('/refuse', (req, res) => {
             }
           },
           function (err) {
-            res.send({ Code: 200, Msg: '操作成功' })
+            res.send({ Code: 200, Msg: 'Operate successfully' })
           }
         )
       } else {
         res.send({
           Code: 500,
-          Msg: '不可操作'
+          Msg: 'Inoperative'
         })
       }
     }
@@ -223,28 +223,31 @@ router.post('/updateRecord', async (req, res) => {
   try {
     const user = await User.findOne({ account: username }).exec();
     if (!user) {
-      return res.status(404).send({ Code: 404, Msg: '用户未找到' });
+      return res.status(404).send({ Code: 404, Msg: 'User not found' });
     }
 
     const record = await Record.findOne({ user: user._id }).exec();
     if (!record) {
-      return res.status(404).send({ Code: 404, Msg: '记录未找到' });
+      return res.status(404).send({ Code: 404, Msg: 'Record not found' });
     }
 
-    // 确保 currentStep 是一个有效的步骤
+    //Ensure currentStep is a valid step
     if (!documentsFieldMap[currentStep]) {
-      return res.status(400).send({ Code: 400, Msg: '无效的 currentStep' });
+      return res.status(400).send({ Code: 400, Msg: 'Invalid currentStep' });
     }
 
-    // 更新Record的状态和文件列表
+    //Update Record's status and the file list
     record.onboardingStatus[`${currentStep}Status`] = visaStepStatusEnum.SUBMITTED;
+    if(currentStep === 'ead_card') {
+      record.onboardingStatus[`eadCardStatus`] = visaStepStatusEnum.SUBMITTED;
+    }
     record.documents[documentsFieldMap[currentStep]] = uploadedFiles;
 
     await record.save();
 
-    return res.send({ Code: 200, Msg: '记录更新成功' });
+    return res.send({ Code: 200, Msg: 'Record update successfully' });
   } catch (err) {
     console.error(err);
-    res.status(500).send({ Code: 500, Msg: '服务器内部错误', error: err.message });
+    res.status(500).send({ Code: 500, Msg: 'Internal server error', error: err.message });
   }
 });

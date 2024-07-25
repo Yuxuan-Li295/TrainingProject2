@@ -48,7 +48,7 @@ const Update = () => {
               dispatch(login({ username: id, token }))
             history('/onboard')
           } else {
-            message.error(typeof data.Msg === 'string' ? data.Msg : '服务器错误')
+            message.error(typeof data.Msg === 'string' ? data.Msg : 'Unknown server error')
           }
         }).catch(() => {
       //

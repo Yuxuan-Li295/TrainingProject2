@@ -6,7 +6,7 @@ const Get = (Schema, filter, req, res, populate1, populate2) => {
   let PageIndex = parseInt(form.PageIndex);
   let PageSize = parseInt(form.PageSize);
 
-  //当前页码
+  //Current page
   if (PageIndex == -1) PageIndex = 1;
   Schema.find({ ...filter, user })
     .skip((PageIndex - 1) * PageSize)

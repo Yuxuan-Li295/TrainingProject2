@@ -4,8 +4,6 @@ import axios from 'axios';
 import { useAppSelector } from '../hooks/store';
 import { UploadOutlined, DownloadOutlined, EyeOutlined } from '@ant-design/icons';
 import { DataType, currentVisaStepEnum, IResult, visaStepStatusEnum } from '../type';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 
 const currentVisaStepText = {
     not_started: 'Onboarding Application Phase',
@@ -16,26 +14,51 @@ const currentVisaStepText = {
     complete: 'All Steps Completed'
 };
 
-const documentsFieldMap = {
-    receipt: 'RECEIPT',
-    ead_card: 'EAD_CARD',
-    i983: 'I983_FORM',
-    i20: 'I20_FORM'
-};
 
 const UserVisaStatus = () => {
-    const { username } = useAppSelector(state => state.counter);
+    const { username, token } = useAppSelector(state => state.counter);
     const [current, setStepCurrent] = useState<number>(0);
     const [currentStepStatus, setCurrentStepStatus] = useState<string>('');
+    const [currentFeedback, setCurrentFeedback] = useState<string>('');
     const [record, setRecord] = useState<DataType | null>(null);
+    const [workAuthorization, setWorkAuthorization] = useState<{ title: string } | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [fileUrl, setFileUrl] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [fileList, setFileList] = useState<any[]>([]);
 
     useEffect(() => {
-        fetchRecordData();
+        fetchUserData();
     }, [username]);
+
+    const fetchUserData = () => {
+        setLoading(true);
+        axios
+            .post<{ Code: number; Msg: string; data: DataType }>(`http://localhost:8088/Employee/info`, { username }, {
+                headers: { authorization: token },
+            })
+            .then(({ data }) => {
+                if (data.Code === 200) {
+                    const userData = data.data;
+                    setRecord(userData);
+
+                    // @ts-ignore
+                    setWorkAuthorization(userData.workAuthorization);
+                    // @ts-ignore
+                    if (userData.workAuthorization.title === 'OPT') {
+                        fetchRecordData();
+                    }
+                } else {
+                    message.error(data.Msg || 'Server error');
+                }
+            })
+            .catch(() => {
+                message.error('Server error');
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
 
     const fetchRecordData = () => {
         setLoading(true);
@@ -47,7 +70,7 @@ const UserVisaStatus = () => {
                     // @ts-ignore
                     const userData = data.data[0];
                     setRecord(userData);
-                    const { currentStep, receiptStatus, eadCardStatus, i983Status, i20Status } = userData.onboardingStatus ?? {};
+                    const { currentStep, receiptStatus, eadCardStatus, i983Status, i20Status, currentFeedback } = userData.onboardingStatus ?? {};
                     let status = '';
                     if (currentStep === currentVisaStepEnum.RECEIPT) {
                         setStepCurrent(1);
@@ -68,6 +91,7 @@ const UserVisaStatus = () => {
                         setStepCurrent(0);
                     }
                     setCurrentStepStatus(status);
+                    setCurrentFeedback(currentFeedback || '');
                 } else {
                     message.error(data.Msg || 'Server error');
                 }
@@ -195,14 +219,26 @@ const UserVisaStatus = () => {
         const files = getDocumentFiles(stepKey);
         const isUploadable = stepStatus === 'Not Submitted' || stepStatus === 'Rejected';
 
-
         return (
             <div>
                 {stepStatus}
-                {// @ts-ignore
-                    files.length > 0 && renderFiles(files)}
+                {stepStatus === 'Rejected' && (
+                    <div style={{ color: 'red', fontWeight: 'bold', marginTop: '10px' }}>
+                        Feedback: {currentFeedback}
+                    </div>
+                )}
+                {stepStatus === 'Submitted' && (
+                    <div style={{ color: 'red', fontWeight: 'bold', marginTop: '10px' }}>
+                        Waiting for HR to approve your document
+                    </div>
+                )}
+                {stepStatus === 'Not Submitted' && (
+                    <div style={{ color: 'red', fontWeight: 'bold', marginTop: '10px' }}>
+                        Please upload a copy of your document
+                    </div>
+                )}
                 {isUploadable && (
-                    <div>
+                    <div style={{ marginBottom: 16 }}>
                         <Upload
                             fileList={fileList}
                             onChange={handleUploadChange}
@@ -221,13 +257,28 @@ const UserVisaStatus = () => {
                         </Button>
                     </div>
                 )}
+                {//@ts-ignore
+                    files.length > 0 && renderFiles(files)}
             </div>
         );
     };
 
+    if (!workAuthorization || workAuthorization.title !== 'OPT') {
+        return (
+            <div className="page-container">
+                <Card
+                    title="Work Authorization"
+                    bordered={false}
+                    style={{ maxWidth: 800, margin: '0 auto', marginTop: 20 }}
+                >
+                    <p>Work Authorization Type: {workAuthorization?.title}</p>
+                </Card>
+            </div>
+        );
+    }
+
     return (
-        <div className="page-container">
-            <Header />
+        <div className="page-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '120vh' }}>
             <Card
                 title="Visa Status"
                 bordered={false}
@@ -265,7 +316,6 @@ const UserVisaStatus = () => {
                     </Col>
                 </Row>
             </Card>
-            <Footer />
             <Modal
                 visible={isModalVisible}
                 onCancel={handleCancel}

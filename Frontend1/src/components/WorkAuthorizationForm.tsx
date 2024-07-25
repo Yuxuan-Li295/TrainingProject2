@@ -1,6 +1,5 @@
 import React from 'react'
 import { Form, Select, DatePicker, Input } from 'antd'
-import moment from 'moment'
 
 const { Option } = Select
 

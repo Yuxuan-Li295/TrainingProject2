@@ -20,6 +20,6 @@ router
   .put(jwt.check, (req, res) => {
     Config.findOneAndUpdate({ user: req.user }, req.body, err => {
       if (err) res.status(500).send(err);
-      res.send({ Code: 200, Msg: "保存成功" });
+      res.send({ Code: 200, Msg: "Saved Successfully" });
     });
   });

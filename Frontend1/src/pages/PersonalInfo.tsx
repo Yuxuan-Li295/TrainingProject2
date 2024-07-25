@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Form, Input, message, FormProps, DatePicker, Upload, Select, Col, Row, Card } from 'antd'
+import { Button, Form, Input, message, FormProps, DatePicker, Upload, Select, Col, Row, Card, Modal } from 'antd'
 import axios from 'axios'
 import { useAppSelector } from '../hooks/store'
-import { IResult, UserDataType } from '../type'
+import { UserDataType } from '../type'
 import { UploadOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
 import WorkAuthorizationForm from '../components/WorkAuthorizationForm'
 import FileManagement from '../components/FileManagement'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
+
 interface IForm extends Partial<UserDataType> { }
 
 const { Option } = Select
@@ -20,6 +19,8 @@ const PersonalInfo = () => {
     const [userInfo, setUserInfo] = useState<UserDataType | null>(null)
     const { isLogin, username, token } = useAppSelector(state => state.counter)
     const [fileList, setFileList] = useState<any[]>([])
+    const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({})
+    const [initialValues, setInitialValues] = useState<any>({})
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -37,7 +38,7 @@ const PersonalInfo = () => {
                         const userData = data.data
                         setUserInfo(userData)
                         setFileList(userData.profilePicture ? [{ url: userData.profilePicture }] : [])
-                        form.setFieldsValue({
+                        const formValues = {
                             ...userData,
                             dob: userData.dob ? moment(userData.dob) : null,
                             'address.building': userData.address?.building,
@@ -50,7 +51,9 @@ const PersonalInfo = () => {
                             'workAuthorization.title': userData.workAuthorization?.title,
                             'workAuthorization.startDate': userData.workAuthorization?.startDate ? moment(userData.workAuthorization.startDate) : null,
                             'workAuthorization.endDate': userData.workAuthorization?.endDate ? moment(userData.workAuthorization.endDate) : null,
-                        })
+                        }
+                        setInitialValues(formValues)
+                        form.setFieldsValue(formValues)
                     } else {
                         message.error(data.Msg || 'Failed to fetch user info')
                     }
@@ -176,131 +179,173 @@ const PersonalInfo = () => {
             })
     }
 
+    const handleEditClick = (field: string) => {
+        setIsEditing({ ...isEditing, [field]: true })
+    }
+
+    const handleSaveClick = (field: string) => {
+        setIsEditing({ ...isEditing, [field]: false })
+    }
+
+    const handleCancelClick = (field: string) => {
+        Modal.confirm({
+            title: 'Discard changes?',
+            content: 'Are you sure you want to discard all of your changes?',
+            onOk: () => {
+                setIsEditing({ ...isEditing, [field]: false })
+                form.setFieldsValue(initialValues)
+            }
+        })
+    }
+
+    const renderEditButtons = (field: string) => (
+        <>
+            {!isEditing[field] ? (
+                <Button onClick={() => handleEditClick(field)}>Edit</Button>
+            ) : (
+                <>
+                    <Button onClick={() => handleSaveClick(field)} type="primary">Save</Button>
+                    <Button onClick={() => handleCancelClick(field)} style={{ marginLeft: 8 }}>Cancel</Button>
+                </>
+            )}
+        </>
+    )
+
     if (loading || !userInfo) {
         return <div>Loading...</div>
     }
 
     return (
-        <div className="page-container">
-            <Header />
-            <Card
-                title="Personal Information"
-                bordered={false}
-                style={{ maxWidth: 800, margin: '0 auto', marginTop: 20 }}
+        <Card
+            title="Personal Information"
+            bordered={false}
+            style={{ maxWidth: 800, margin: '0 auto', marginTop: 20 }}
+        >
+            <Form
+                layout="vertical"
+                form={form}
+                className="personal-info-form"
+                onFinish={onFinish}
             >
-                <Form
-                    layout="vertical"
-                    form={form}
-                    className="personal-info-form"
-                    onFinish={onFinish}
-                >
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <Form.Item label="Profile Picture">
-                                <Upload
-                                    listType="picture-card"
-                                    fileList={fileList}
-                                    onChange={handleUploadChange}
-                                    beforeUpload={() => false}
-                                >
-                                    {fileList.length === 0 && <UploadOutlined />}
-                                </Upload>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="First Name" name="firstName" rules={[{ required: true, message: 'Please input your first name!' }]}>
-                                <Input placeholder="Input first name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Last Name" name="lastName" rules={[{ required: true, message: 'Please input your last name!' }]}>
-                                <Input placeholder="Input last name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Preferred Name" name="preferredName" rules={[{ required: true, message: 'Please input your preferred name!' }]}>
-                                <Input placeholder="Input preferred name" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
-                                <Input placeholder="Input email" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Date of Birth" name="dob" rules={[{ required: true, message: 'Please input your date of birth!' }]}>
-                                <DatePicker style={{ width: '100%' }} />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Gender" name="gender" rules={[{ required: true, message: 'Please select your gender!' }]}>
-                                <Select placeholder="Select gender">
-                                    <Option value="male">Male</Option>
-                                    <Option value="female">Female</Option>
-                                    <Option value="i do not wish to answer">I do not wish to answer</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="SSN" name="ssn" rules={[{ required: true, message: 'Please input your SSN!' }]}>
-                                <Input placeholder="Input SSN" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Building" name="address.building">
-                                <Input placeholder="Input building" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Street" name="address.street" rules={[{ required: true, message: 'Please input your street!' }]}>
-                                <Input placeholder="Input street" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="City" name="address.city" rules={[{ required: true, message: 'Please input your city!' }]}>
-                                <Input placeholder="Input city" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="State" name="address.state" rules={[{ required: true, message: 'Please input your state!' }]}>
-                                <Input placeholder="Input state" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Zip Code" name="address.zip" rules={[{ required: true, message: 'Please input your zip code!' }]}>
-                                <Input placeholder="Input zip code" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Cell Phone" name="contactInfo.cellPhone" rules={[{ required: true, message: 'Please input your cell phone!' }]}>
-                                <Input placeholder="Input cell phone" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Work Phone" name="contactInfo.workPhone">
-                                <Input placeholder="Input work phone" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                            <WorkAuthorizationForm form={form} workAuthTitle={userInfo?.workAuthorization?.title} />
-                        </Col>
-                        <Col span={24}>
-                            <Form.Item label="Upload Driver’s license and Work authorization">
-                                <FileManagement />
-                            </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                            <Form.Item>
-                                <Button type="primary" block htmlType="submit">
-                                    Update Info
-                                </Button>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                </Form>
-            </Card>
-            <Footer />
-        </div>
+                <Row gutter={16}>
+                    <Col span={24}>
+                        <Form.Item label="Profile Picture">
+                            <Upload
+                                listType="picture-card"
+                                fileList={fileList}
+                                onChange={handleUploadChange}
+                                beforeUpload={() => false}
+                            >
+                                {fileList.length === 0 && <UploadOutlined />}
+                            </Upload>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="First Name" name="firstName" rules={[{ required: true, message: 'Please input your first name!' }]}>
+                            <Input placeholder="Input first name" disabled={!isEditing['firstName']} />
+                        </Form.Item>
+                        {renderEditButtons('firstName')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Last Name" name="lastName" rules={[{ required: true, message: 'Please input your last name!' }]}>
+                            <Input placeholder="Input last name" disabled={!isEditing['lastName']} />
+                        </Form.Item>
+                        {renderEditButtons('lastName')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Preferred Name" name="preferredName" rules={[{ required: true, message: 'Please input your preferred name!' }]}>
+                            <Input placeholder="Input preferred name" disabled={!isEditing['preferredName']} />
+                        </Form.Item>
+                        {renderEditButtons('preferredName')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
+                            <Input placeholder="Input email" disabled={!isEditing['email']} />
+                        </Form.Item>
+                        {renderEditButtons('email')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Date of Birth" name="dob" rules={[{ required: true, message: 'Please input your date of birth!' }]}>
+                            <DatePicker style={{ width: '100%' }} disabled={!isEditing['dob']} />
+                        </Form.Item>
+                        {renderEditButtons('dob')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Gender" name="gender" rules={[{ required: true, message: 'Please select your gender!' }]}>
+                            <Select placeholder="Select gender" disabled={!isEditing['gender']}>
+                                <Option value="male">Male</Option>
+                                <Option value="female">Female</Option>
+                                <Option value="i do not wish to answer">I do not wish to answer</Option>
+                            </Select>
+                        </Form.Item>
+                        {renderEditButtons('gender')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="SSN" name="ssn" rules={[{ required: true, message: 'Please input your SSN!' }]}>
+                            <Input placeholder="Input SSN" disabled={!isEditing['ssn']} />
+                        </Form.Item>
+                        {renderEditButtons('ssn')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Building" name="address.building">
+                            <Input placeholder="Input building" disabled={!isEditing['address.building']} />
+                        </Form.Item>
+                        {renderEditButtons('address.building')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Street" name="address.street" rules={[{ required: true, message: 'Please input your street!' }]}>
+                            <Input placeholder="Input street" disabled={!isEditing['address.street']} />
+                        </Form.Item>
+                        {renderEditButtons('address.street')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="City" name="address.city" rules={[{ required: true, message: 'Please input your city!' }]}>
+                            <Input placeholder="Input city" disabled={!isEditing['address.city']} />
+                        </Form.Item>
+                        {renderEditButtons('address.city')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="State" name="address.state" rules={[{ required: true, message: 'Please input your state!' }]}>
+                            <Input placeholder="Input state" disabled={!isEditing['address.state']} />
+                        </Form.Item>
+                        {renderEditButtons('address.state')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Zip Code" name="address.zip" rules={[{ required: true, message: 'Please input your zip code!' }]}>
+                            <Input placeholder="Input zip code" disabled={!isEditing['address.zip']} />
+                        </Form.Item>
+                        {renderEditButtons('address.zip')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Cell Phone" name="contactInfo.cellPhone" rules={[{ required: true, message: 'Please input your cell phone!' }]}>
+                            <Input placeholder="Input cell phone" disabled={!isEditing['contactInfo.cellPhone']} />
+                        </Form.Item>
+                        {renderEditButtons('contactInfo.cellPhone')}
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Work Phone" name="contactInfo.workPhone">
+                            <Input placeholder="Input work phone" disabled={!isEditing['contactInfo.workPhone']} />
+                        </Form.Item>
+                        {renderEditButtons('contactInfo.workPhone')}
+                    </Col>
+                    <Col span={24}>
+                        <WorkAuthorizationForm form={form} workAuthTitle={userInfo?.workAuthorization?.title} />
+                    </Col>
+                    <Col span={24}>
+                        <Form.Item label="Upload Driver’s license and Work authorization">
+                            <FileManagement />
+                        </Form.Item>
+                    </Col>
+                    <Col span={24}>
+                        <Form.Item>
+                            <Button type="primary" block htmlType="submit">
+                                Update Info
+                            </Button>
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form>
+        </Card>
     )
 }
 

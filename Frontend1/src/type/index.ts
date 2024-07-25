@@ -38,16 +38,18 @@ export enum visaStepStatusEnum {
   REJECTED='rejected',  // 已拒绝
 }
 export enum visaStepNextEnum {
-  NOT_STARTED= '提交入职申请',
-  RECEIPT_APPLY='提交OPT收据申请',  
-  RECEIPT_VERIFY= '等待OPT收据审核',  
-  EAD_CARD_APPLY='提交EAD卡申请',  
-  EAD_CARD_VERIFY= '等待EAD卡审核', 
-  I983_APPLY='提交I-983表格申请',  
-  I983_VERIFY= '等待I-983表格审核', 
-  I20_APPLY='提交I-20表格申请',  
-  I20_VERIFY= '等待I-20表格审核', 
+  NOT_STARTED = 'Submit Onboarding',
+  RECEIPT_APPLY = 'Submit OPT Receipt',
+  RECEIPT_VERIFY = 'Wait for OPT Verification',
+  EAD_CARD_APPLY = 'Submit EAD Card',
+  EAD_CARD_VERIFY = 'Wait for EAD Verification',
+  I983_APPLY = 'Submit I-983',
+  I983_VERIFY = 'Wait for I-983 Verification',
+  I20_APPLY = 'Submit I-20',
+  I20_VERIFY = 'Wait for I-20 Verification',
 }
+
+
 
 export interface UserDataType {
   _id?: string;

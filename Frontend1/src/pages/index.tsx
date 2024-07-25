@@ -12,37 +12,37 @@ interface DataType {
 
 const columns: TableProps<DataType>['columns'] = [
   {
-    title: '姓名',
+    title: 'Name',
     dataIndex: 'name',
     key: 'name',
     render: (text) => <a href="www">{text}</a>
   },
   {
-    title: '社会保险号',
+    title: 'SSN',
     dataIndex: 'age',
     key: 'age'
   },
   {
-    title: '工作授权头衔',
+    title: 'Work Authorization Title',
     dataIndex: 'address',
     key: 'address'
   },
   {
-    title: '电话号码',
+    title: 'Phone Number',
     dataIndex: 'address',
     key: 'address'
   },
   {
-    title: '电子邮箱',
+    title: 'Email',
     dataIndex: 'address',
     key: 'address'
   },
   {
-    title: '操作',
+    title: 'Operation',
     key: 'action',
-    render: (_, record) => (
+    render: (_) => (
       <Space size="middle">
-        <a href="22">查看</a>
+        <a href="22">View</a>
       </Space>
     )
   }
@@ -76,10 +76,10 @@ const Home = () => {
     <div>
       <Row style={{ margin: '15px -10px' }} gutter={20}>
         <Col span={6}>
-          <Input placeholder="请输入姓名"></Input>
+          <Input placeholder="Please enter the name"></Input>
         </Col>
         <Col span={6}>
-          <Button type="primary">查询</Button>
+          <Button type="primary">Search</Button>
         </Col>
       </Row>
       <Table columns={columns} dataSource={data} />
