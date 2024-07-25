@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../data/models/User')
+const Record = require('../data/models/Record')
 const jwt = require("../controller/jwt");
 
 module.exports = router
@@ -49,30 +50,48 @@ router.post('/info',(req, res) => {
   }
 })
 
-router.post('/update/:username', (req, res) => {
-  const { username } = req.params
-  const updateData = req.body
+router.post('/update/:username', async (req, res) => {
+  const { username } = req.params;
+  const updateData = req.body;
 
-  User.findOneAndUpdate({ account: username }, updateData, { new: true }, (err, doc) => {
-    if (err) {
-      return res.status(500).send({
-        Code: 500,
-        Msg: '服务器错误'
-      })
-    }
-    if (!doc) {
+  try {
+    const user = await User.findOneAndUpdate({ account: username }, updateData, { new: true }).exec();
+    if (!user) {
       return res.status(404).send({
         Code: 404,
         Msg: '用户未找到'
-      })
+      });
     }
+
+    // Find the user's record
+    const record = await Record.findOne({ user: user._id }).exec();
+
+    if (record) {
+      if (record.onboardingStatus.currentStep === 'not_started') {
+        if (user.workAuthorization.title === 'OPT') {
+          record.onboardingStatus.currentStep = 'receipt';
+        } else {
+          console.log(user.workAuthorization.title)
+          record.onboardingStatus.currentStep = 'complete';
+          record.status = 'complete';
+        }
+        await record.save();
+      }
+    }
+
     res.send({
       Code: 200,
       Msg: '更新成功',
-      data: doc
-    })
-  })
-})
+      data: user
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      Code: 500,
+      Msg: '服务器错误'
+    });
+  }
+});
 
 router.post('/onboard/:username', (req, res) => {
   const { username } = req.params

@@ -238,6 +238,9 @@ router.post('/updateRecord', async (req, res) => {
 
     // 更新Record的状态和文件列表
     record.onboardingStatus[`${currentStep}Status`] = visaStepStatusEnum.SUBMITTED;
+    if(currentStep === 'ead_card') {
+      record.onboardingStatus[`eadCardStatus`] = visaStepStatusEnum.SUBMITTED;
+    }
     record.documents[documentsFieldMap[currentStep]] = uploadedFiles;
 
     await record.save();
