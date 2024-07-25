@@ -59,7 +59,7 @@ const Home = () => {
         <Space size="middle">
           <Button type="link" onClick={() => {
             history(`/user/info/${record._id}`)
-          }}>Search</Button>
+          }}>Detail</Button>
 
         </Space>
       )

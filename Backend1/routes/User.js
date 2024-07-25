@@ -106,7 +106,6 @@ router.post('/register', (req, res) => {
                 starttime: `${starttime}`,
                 endtime: `${starttime + 2 * 24 * 3600000}`,
                 day: '2',
-                status: '1',
                 id: new Date().getTime()
               },
               (err, doc) => {

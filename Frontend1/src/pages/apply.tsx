@@ -280,13 +280,22 @@ const Home = () => {
             key: 'status',
             width: 120,
             render: (_, record) => {
+                const currentstep = record?.onboardingStatus['currentStep']
+
                 const key = currentVisaStepMap[record.onboardingStatus.currentStep as VisaStepEnum] as keyof IOnboardingStatus;
+                console.log(key)
+                if(currentstep === 'not_started'){
+                    return <Tag color="magenta"> Unstarted </Tag>
+                }
                 return <Tag color="magenta">
-                    {!key || record?.onboardingStatus['currentStep'] === 'complete' ? 'Completed' :
-                        record?.onboardingStatus[key] === visaStepStatusEnum.NOT_SUBMITTED ? 'Unsubmit' :
-                            record?.onboardingStatus[key] === visaStepStatusEnum.SUBMITTED ? 'Submitted' :
-                                record?.onboardingStatus[key] === visaStepStatusEnum.APPROVED ? 'Approved' :
-                                    record?.onboardingStatus[key] === visaStepStatusEnum.REJECTED ? 'Rejected' : ''}
+                    {
+                        !key || currentstep === 'complete' ? 'Completed' :
+                            currentstep === 'not_started' ? 'Unstarted' :
+                                record?.onboardingStatus[key] === visaStepStatusEnum.NOT_SUBMITTED ? 'Unsubmitted' :
+                                    record?.onboardingStatus[key] === visaStepStatusEnum.SUBMITTED ? 'Submitted' :
+                                        record?.onboardingStatus[key] === visaStepStatusEnum.APPROVED ? 'Approved' :
+                                            record?.onboardingStatus[key] === visaStepStatusEnum.REJECTED ? 'Rejected' : ''
+                    }
                 </Tag>
             }
         },
