@@ -117,19 +117,29 @@ const Home = () => {
               //@ts-ignore
               dataSource={record?.documents?.RECEIPT}
               renderItem={item => (
-                  <List.Item
-                      actions={[
-                        <Button icon={<DownloadOutlined />} onClick={() => handleDownload(
-                            //@ts-ignore
-                            item.id, item.name)}>Download</Button>,
-                        <Button icon={<EyeOutlined />} onClick={() => handlePreview(
-                            //@ts-ignore
-                            item.id, item.name)}>Preview</Button>
-                      ]}
-                  >
-                    {
-                      //@ts-ignore
-                      item.name}
+                  <List.Item>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          {
+                              // @ts-ignore
+                              item.name
+                          }
+                          <Button
+                              icon={<DownloadOutlined />}
+                              onClick={() => handleDownload(
+                                  // @ts-ignore
+                                  item.id, item.name
+                              )}
+                              style={{ marginTop: 8 }}
+                          />
+                          <Button
+                              icon={<EyeOutlined />}
+                              onClick={() => handlePreview(
+                                  // @ts-ignore
+                                  item.id, item.name
+                              )}
+                              style={{ marginTop: 8 }}
+                          />
+                      </div>
                   </List.Item>
               )}
           />
@@ -145,19 +155,29 @@ const Home = () => {
               //@ts-ignore
               dataSource={record?.documents?.EAD_CARD}
               renderItem={item => (
-                  <List.Item
-                      actions={[
-                        <Button icon={<DownloadOutlined />} onClick={() => handleDownload(
-                            //@ts-ignore
-                            item.id, item.name)}>Download</Button>,
-                        <Button icon={<EyeOutlined />} onClick={() => handlePreview(
-                            //@ts-ignore
-                            item.id, item.name)}>Preview</Button>
-                      ]}
-                  >
-                    {
-                      //@ts-ignore
-                      item.name}
+                  <List.Item>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          {
+                              // @ts-ignore
+                              item.name
+                          }
+                          <Button
+                              icon={<DownloadOutlined />}
+                              onClick={() => handleDownload(
+                                  // @ts-ignore
+                                  item.id, item.name
+                              )}
+                              style={{ marginTop: 8 }}
+                          />
+                          <Button
+                              icon={<EyeOutlined />}
+                              onClick={() => handlePreview(
+                                  // @ts-ignore
+                                  item.id, item.name
+                              )}
+                              style={{ marginTop: 8 }}
+                          />
+                      </div>
                   </List.Item>
               )}
           />
@@ -173,19 +193,29 @@ const Home = () => {
               //@ts-ignore
               dataSource={record?.documents?.I983_FORM}
               renderItem={item => (
-                  <List.Item
-                      actions={[
-                        <Button icon={<DownloadOutlined />} onClick={() => handleDownload(
-                            //@ts-ignore
-                            item.id, item.name)}>Download</Button>,
-                        <Button icon={<EyeOutlined />} onClick={() => handlePreview(
-                            //@ts-ignore
-                            item.id, item.name)}>Preview</Button>
-                      ]}
-                  >
-                    {
-                      //@ts-ignore
-                      item.name}
+                  <List.Item>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          {
+                              // @ts-ignore
+                              item.name
+                          }
+                          <Button
+                              icon={<DownloadOutlined />}
+                              onClick={() => handleDownload(
+                                  // @ts-ignore
+                                  item.id, item.name
+                              )}
+                              style={{ marginTop: 8 }}
+                          />
+                          <Button
+                              icon={<EyeOutlined />}
+                              onClick={() => handlePreview(
+                                  // @ts-ignore
+                                  item.id, item.name
+                              )}
+                              style={{ marginTop: 8 }}
+                          />
+                      </div>
                   </List.Item>
               )}
           />
@@ -201,19 +231,29 @@ const Home = () => {
               //@ts-ignore
               dataSource={record?.documents?.I20_FORM}
               renderItem={item => (
-                  <List.Item
-                      actions={[
-                        <Button icon={<DownloadOutlined />} onClick={() => handleDownload(
-                            //@ts-ignore
-                            item.id, item.name)}>Download</Button>,
-                        <Button icon={<EyeOutlined />} onClick={() => handlePreview(
-                            //@ts-ignore
-                            item.id, item.name)}>Preview</Button>
-                      ]}
-                  >
-                    {
-                      //@ts-ignore
-                      item.name}
+                  <List.Item>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          {
+                              // @ts-ignore
+                              item.name
+                          }
+                          <Button
+                              icon={<DownloadOutlined />}
+                              onClick={() => handleDownload(
+                                  // @ts-ignore
+                                  item.id, item.name
+                              )}
+                              style={{ marginTop: 8 }}
+                          />
+                          <Button
+                              icon={<EyeOutlined />}
+                              onClick={() => handlePreview(
+                                  // @ts-ignore
+                                  item.id, item.name
+                              )}
+                              style={{ marginTop: 8 }}
+                          />
+                      </div>
                   </List.Item>
               )}
           />
